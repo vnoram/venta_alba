@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda Oficial Colo Colo - Camisetas de Fútbol</title>
+    
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="img/logo-colo-colo.png" alt="Logo Colo Colo">
+            Tienda Oficial Colo Colo
+        </div>
+        <nav>
+            <span class="menu-toggle" onclick="toggleMenu()">☰</span>
+            <ul id="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#productos">Productos</a></li>
+                <li><a href="#carrito">Carrito</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio" class="banner">
+        </section>
+
+        <section id="productos">
+            <h2>Nuestras Camisetas</h2>
+            <div class="productos">
+
+                <div class="producto">
+                    <img src="img/camiseta-mati2006.jpeg" alt="Camiseta Matias Fernandez 2006">
+                    <h3 class="producto-nombre">Matias Fernandez</h3>
+                    <h3 style="color: red;">mejor jugador de sudamerica 2006</h3>
+                    <p>$645.000 CLP</p>
+                    <button>Agregar al carrito</button>
+                </div>
+
+                <div class="producto">
+                    <img src="img/camiseta-barticciotto1991.jpeg" alt="Camiseta Barticciotto 1991">
+                    <h3 class="producto-nombre">Barticciotto</h3>
+                    <p>$145.000 CLP</p>
+                    <button>Agregar al carrito</button>
+                </div>
+
+                <div class="producto">
+                    <img src="img/camiseta-paredes30.jpeg" alt="Camiseta Paredes">
+                    <h3 class="producto-nombre">Paredes</h3>
+                    <p>$70.000 CLP</p>
+                    <button>Agregar al carrito</button>
+                </div>
+
+                <div class="producto">
+                    <img src="img/camiseta-palacios.jpeg" alt="Camiseta Palacios">
+                    <h3 class="producto-nombre">La joya Palacios</h3>
+                    <h3 style="color: red;">valor incalculabre</h3>
+                    <p>$30.000 CLP</p>
+                    <button>Agregar al carrito</button>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="carrito">
+            <h2>Carrito de Compras</h2>
+            <ul id="lista-carrito"></ul>
+            <p>Total: <span id="total">0</span> CLP</p>
+            <button id="btn-comprar">Comprar Ahora</button>
+        </section>
+
+        <section id="contacto">
+            <h2>Contacto</h2>
+            <p>Para consultas, escríbenos a <a href="mailto:washo@colocolo.cl">washo@colocolo.cl</a></p>
+            <p>Síguenos en redes sociales:</p>
+            <p>
+                <a href="#">Albo</a> |
+                <a href="#">Bellaako</a> |
+                <a href="#">Locxra</a>
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        &copy; 2024 Tienda Oficial Colo Colo - Todos los derechos reservados
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('show');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const carrito = [];
+            const listaCarrito = document.getElementById('lista-carrito');
+            const totalSpan = document.getElementById('total');
+            const botonesAgregar = document.querySelectorAll('.producto button');
+            const btnComprar = document.getElementById('btn-comprar');
+
+            function agregarAlCarrito(nombre, precio) {
+                carrito.push({ nombre, precio });
+                actualizarCarrito();
+            }
+
+            function actualizarCarrito() {
+                listaCarrito.innerHTML = '';
+                let total = 0;
+
+                carrito.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = `${item.nombre} - $${item.precio.toLocaleString('es-CL')} CLP`;
+                    listaCarrito.appendChild(li);
+                    total += item.precio;
+                });
+
+                totalSpan.textContent = total.toLocaleString('es-CL');
+            }
+
+            botonesAgregar.forEach(boton => {
+                boton.addEventListener('click', () => {
+                    const productoDiv = boton.closest('.producto');
+                    const nombre = productoDiv.querySelector('.producto-nombre').textContent;
+                    const precioTexto = productoDiv.querySelector('p').textContent;
+                    const precio = parseInt(precioTexto.replace(/\$|\.| CLP/g, ''));
+
+                    agregarAlCarrito(nombre, precio);
+                });
+            });
+
+            btnComprar.addEventListener('click', () => {
+                if (carrito.length === 0) {
+                    alert('Tu carrito está vacío. Agrega productos para comprar.');
+                    return;
+                }
+
+                const totalTexto = totalSpan.textContent;
+                alert(`¡Gracias por tu compra!\nTotal: $${totalTexto} CLP\n(Esto es solo una simulación)`);
+
+                carrito.length = 0;
+                actualizarCarrito();
+            });
+
+        });
+    </script>
+</body>
+
+</html>
