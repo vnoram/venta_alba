@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carrito - Tienda Oficial Colo Colo</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="img/logo-colo-colo.png" alt="Logo Colo Colo">
+            Tienda Oficial Colo Colo
+        </div>
+        <nav>
+            <span class="menu-toggle" onclick="toggleMenu()">☰</span>
+            <ul id="nav-links">
+                <li><a href="index.html#inicio">Inicio</a></li>
+                <li><a href="index.html#productos">Productos</a></li>
+                <li><a href="carrito.html">Carrito</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="carrito">
+            <h2>Carrito de Compras</h2>
+            <p id="carrito-vacio" class="mensaje-vacio" hidden>Tu carrito está vacío. Agrega productos desde la tienda.</p>
+            <ul id="lista-carrito"></ul>
+            <p>Total: <span id="total">0</span> CLP</p>
+            <button id="btn-comprar">Comprar Ahora</button>
+            <p><a href="index.html#productos">Volver a productos</a></p>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2024 Tienda Oficial Colo Colo - Todos los derechos reservados
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('show');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const listaCarrito = document.getElementById('lista-carrito');
+            const totalSpan = document.getElementById('total');
+            const btnComprar = document.getElementById('btn-comprar');
+
+            function obtenerCarrito() {
+                const datosGuardados = localStorage.getItem('carrito');
+                return datosGuardados ? JSON.parse(datosGuardados) : [];
+            }
+
+            function guardarCarrito(carrito) {
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+            }
+
+            function actualizarCarrito() {
+                const carrito = obtenerCarrito();
+                listaCarrito.innerHTML = '';
+                const carritoVacio = document.getElementById('carrito-vacio');
+                let total = 0;
+
+                if (carrito.length === 0) {
+                    carritoVacio.hidden = false;
+                } else {
+                    carritoVacio.hidden = true;
+
+                    carrito.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = `${item.nombre} - $${item.precio.toLocaleString('es-CL')} CLP`;
+                        listaCarrito.appendChild(li);
+                        total += item.precio;
+                    });
+                }
+
+                totalSpan.textContent = total.toLocaleString('es-CL');
+            }
+
+            btnComprar.addEventListener('click', () => {
+                const carrito = obtenerCarrito();
+
+                if (carrito.length === 0) {
+                    alert('Tu carrito está vacío. Agrega productos para comprar.');
+                    return;
+                }
+
+                const totalTexto = totalSpan.textContent;
+                alert(`¡Gracias por tu compra!\nTotal: $${totalTexto} CLP\n(Esto es solo una simulación)`);
+
+                guardarCarrito([]);
+                actualizarCarrito();
+            });
+
+            actualizarCarrito();
+        });
+    </script>
+</body>
+
+</html>
