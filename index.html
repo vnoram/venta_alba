@@ -22,7 +22,7 @@
             <ul id="nav-links">
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#productos">Productos</a></li>
-                <li><a href="#carrito">Carrito</a></li>
+                <li><a href="carrito.html">Carrito</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
         </nav>
@@ -37,16 +37,16 @@
             <div class="productos">
 
                 <div class="producto">
-                    <img src="img/camiseta-mati2006.jpg" alt="Camiseta Matias Fernandez 2006">
-                    <h3 class="producto-nombre">Matias Fernandez</h3>
-                    <h3 style="color: red;">mejor jugador de sudamerica 2006</h3>
-                    <p>$645.000 CLP</p>
-                    <button>Agregar al carrito</button>
-                </div>
+                    <img src="img/camiseta-mati2006.jpg" alt="Camiseta Matías Fernández 2006">
+                <h3 class="producto-nombre">Matías Fernández</h3>
+                <h3 style="color: red;">Mejor jugador de Sudamérica 2006</h3>
+                <p>$64.500 CLP</p>
+                <button>Agregar al carrito</button>
+            </div>
 
                 <div class="producto">
-                    <img src="img/camiseta-barticciotto1991.jpg" alt="Camiseta Barticciotto 1991">
-                    <h3 class="producto-nombre">Barticciotto</h3>
+                    <img src="img/camiseta-barticciotto1991.jpg" alt="Camiseta Marcelo Barticciotto 1991">
+                    <h3 class="producto-nombre">Marcelo Barticciotto</h3>
                     <p>$145.000 CLP</p>
                     <button>Agregar al carrito</button>
                 </div>
@@ -59,9 +59,9 @@
                 </div>
 
                 <div class="producto">
-                    <img src="img/camiseta-palacios.jpg" alt="Camiseta Palacios">
-                    <h3 class="producto-nombre">La joya Palacios</h3>
-                    <h3 style="color: red;">valor incalculabre</h3>
+                    <img src="img/camiseta-palacios.jpg" alt="Camiseta Carlos Palacios">
+                    <h3 class="producto-nombre">Carlos Palacios</h3>
+                    <h3 style="color: red;">Edición especial 2024</h3>
                     <p>$30.000 CLP</p>
                     <button>Agregar al carrito</button>
                 </div>
@@ -69,21 +69,14 @@
             </div>
         </section>
 
-        <section id="carrito">
-            <h2>Carrito de Compras</h2>
-            <ul id="lista-carrito"></ul>
-            <p>Total: <span id="total">0</span> CLP</p>
-            <button id="btn-comprar">Comprar Ahora</button>
-        </section>
-
         <section id="contacto">
             <h2>Contacto</h2>
-            <p>Para consultas, escríbenos a <a href="mailto:washo@colocolo.cl">washo@colocolo.cl</a></p>
+            <p>Para consultas, escríbenos a <a href="mailto:contacto@colocolo.cl">contacto@colocolo.cl</a></p>
             <p>Síguenos en redes sociales:</p>
             <p>
-                <a href="#">Albo</a> |
-                <a href="#">Bellaako</a> |
-                <a href="#">Locxra</a>
+                <a href="https://www.instagram.com/colocolooficial" target="_blank" rel="noreferrer">Instagram</a> |
+                <a href="https://www.facebook.com/ColoColo" target="_blank" rel="noreferrer">Facebook</a> |
+                <a href="https://twitter.com/ColoColo" target="_blank" rel="noreferrer">X</a>
             </p>
         </section>
 
@@ -100,30 +93,15 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-
-            const carrito = [];
-            const listaCarrito = document.getElementById('lista-carrito');
-            const totalSpan = document.getElementById('total');
             const botonesAgregar = document.querySelectorAll('.producto button');
-            const btnComprar = document.getElementById('btn-comprar');
 
-            function agregarAlCarrito(nombre, precio) {
-                carrito.push({ nombre, precio });
-                actualizarCarrito();
+            function obtenerCarrito() {
+                const datosGuardados = localStorage.getItem('carrito');
+                return datosGuardados ? JSON.parse(datosGuardados) : [];
             }
 
-            function actualizarCarrito() {
-                listaCarrito.innerHTML = '';
-                let total = 0;
-
-                carrito.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = `${item.nombre} - $${item.precio.toLocaleString('es-CL')} CLP`;
-                    listaCarrito.appendChild(li);
-                    total += item.precio;
-                });
-
-                totalSpan.textContent = total.toLocaleString('es-CL');
+            function guardarCarrito(carrito) {
+                localStorage.setItem('carrito', JSON.stringify(carrito));
             }
 
             botonesAgregar.forEach(boton => {
@@ -133,23 +111,13 @@
                     const precioTexto = productoDiv.querySelector('p').textContent;
                     const precio = parseInt(precioTexto.replace(/\$|\.| CLP/g, ''));
 
-                    agregarAlCarrito(nombre, precio);
+                    const carrito = obtenerCarrito();
+                    carrito.push({ nombre, precio });
+                    guardarCarrito(carrito);
+
+                    alert('Producto agregado al carrito. Puedes revisarlo en la sección Carrito.');
                 });
             });
-
-            btnComprar.addEventListener('click', () => {
-                if (carrito.length === 0) {
-                    alert('Tu carrito está vacío. Agrega productos para comprar.');
-                    return;
-                }
-
-                const totalTexto = totalSpan.textContent;
-                alert(`¡Gracias por tu compra!\nTotal: $${totalTexto} CLP\n(Esto es solo una simulación)`);
-
-                carrito.length = 0;
-                actualizarCarrito();
-            });
-
         });
     </script>
 </body>
