@@ -182,7 +182,121 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
 
+.modal.visible {
+    display: flex;
+}
+
+.modal-contenido {
+    background-color: #fff;
+    border-radius: 10px;
+    max-width: 480px;
+    width: 100%;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.texto-secundario {
+    color: #555;
+    margin-top: 0;
+}
+
+.resumen-compra {
+    background: #f7f7f7;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.resumen-compra ul {
+    padding-left: 18px;
+    margin: 10px 0;
+}
+
+.total-modal {
+    font-weight: bold;
+    margin: 0;
+}
+
+#form-pago {
+    display: grid;
+    gap: 10px;
+}
+
+#form-pago label {
+    font-weight: bold;
+}
+
+#form-pago input,
+#form-pago select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.nota-pago {
+    font-size: 0.9em;
+    color: #555;
+    margin: 5px 0 0 0;
+}
+
+.acciones-modal {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 5px;
+}
+
+.btn-principal,
+.btn-secundario {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-principal {
+    background-color: #000;
+    color: #fff;
+}
+
+.btn-principal:hover {
+    background-color: #444;
+}
+
+.btn-secundario {
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+.btn-cerrar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+}
 @media (max-width: 600px) {
     nav ul {
         flex-direction: column;
