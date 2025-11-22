@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpay - BancoEstado</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            background-color: white;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header Top --- */
+        .header-top { background-color: #361253; height: 8px; width: 100%; }
+
+        /* --- Pantallas --- */
+        .contenido-pantalla { padding: 40px; display: none; animation: fadeIn 0.3s; }
+        .contenido-pantalla.visible { display: block; }
+
+        /* --- PANTALLA 4: ESTILO ESPECÍFICO BANCO ESTADO --- */
+        .banco-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Grilla Principal */
+        .banco-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr; /* Izquierda más ancha */
+            gap: 40px;
+        }
+
+        /* Textos Etiquetas */
+        .label-banco {
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .valor-banco {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        /* Dropdown Cuenta */
+        .select-cuenta {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .texto-saldo {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+
+        /* Radio Buttons Personalizados */
+        .opciones-auth {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+        .radio-custom {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            position: relative;
+        }
+        .radio-custom.active .radio-circle {
+            border-color: #F58220; /* Naranja Banco */
+        }
+        .radio-custom.active .radio-circle::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background-color: #F58220;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Caja Autorizar (Be Pass) */
+        .box-autorizar {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .auth-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .icon-lock {
+            background-color: #00C853; /* Verde */
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .auth-title { font-weight: bold; color: #333; font-size: 15px; }
+        .auth-desc { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.4; }
+
+        .btn-naranja {
+            background: linear-gradient(to bottom, #FF9800, #F57C00);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .btn-naranja:hover { background: #EF6C00; }
+
+        /* Columna Derecha (Resumen) */
+        .box-resumen {
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 4px;
+        }
+        .resumen-row { margin-bottom: 20px; }
+        .resumen-label { font-weight: bold; font-size: 13px; color: #333; display: block; margin-bottom: 4px;}
+        .resumen-valor { font-size: 15px; color: #333; }
+        .resumen-comercio {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        /* Estilos Generales Webpay (Pantallas 1, 2, 3) */
+        .header-webpay { padding: 20px 40px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .info-top { background: #f9f9f9; padding: 20px 40px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; }
+        .btn-metodo { border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 15px; border-radius: 8px; }
+        .btn-metodo:hover { background-color: #fdf8ff; border-color: #7B1FA2; }
+        .input-wp { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 15px; box-sizing: border-box; }
+        .btn-pagar-wp { background: #5D005D; color: white; width: 100%; padding: 15px; border-radius: 50px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .loader-container { text-align: center; padding-top: 50px; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #5D005D; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Ajuste Móvil */
+        @media (max-width: 700px) {
+            .banco-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="header-top"></div>
+
+        <div id="header-wp-box">
+            <div class="header-webpay">
+                <img src="https://www.transbank.cl/public/img/logo-webpay-plus.svg" height="40" alt="Webpay">
+            </div>
+            <div class="info-top">
+                <div>
+                    <span style="font-size:13px; color:#666;">Estás pagando en:</span>
+                    <h2 style="margin:0; font-size:18px;">TIENDA WEB COLO-COLO</h2>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size:13px; color:#666;">Monto a pagar:</span>
+                    <div style="font-size:22px; font-weight:bold;" id="monto-top">$0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-1" class="contenido-pantalla visible">
+            <h3>Selecciona tu medio de pago:</h3>
+            <div class="btn-metodo" onclick="irPantalla(2)">
+                <span style="font-size:24px;">💳</span>
+                <div>
+                    <strong>Tarjetas</strong><br>
+                    <span style="font-size:13px; color:#666;">Crédito, Débito, Prepago</span>
+                </div>
+            </div>
+            <div class="btn-metodo">
+                <span style="font-size:24px;">📱</span>
+                <div>
+                    <strong>Onepay</strong><br>
+                    <span style="font-size:13px; color:#666;">Billeteras digitales</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-2" class="contenido-pantalla">
+            <h3>Ingresa los datos de tu tarjeta</h3>
+            <label style="font-weight:bold; font-size:13px; display:block; margin-bottom:5px;">Número de tarjeta</label>
+            <input type="text" class="input-wp" placeholder="xxxx xxxx xxxx xxxx">
+            
+            <label style="font-weight:bold; font-size:13px; display:block; margin-bottom:5px;">Rut</label>
+            <input type="text" class="input-wp" id="rut-input-wp" placeholder="11.111.111-1">
+            
+            <button class="btn-pagar-wp" onclick="irPantalla(3)">Pagar</button>
+        </div>
+
+        <div id="screen-3" class="contenido-pantalla">
+            <div class="loader-container">
+                <div class="spinner"></div>
+                <h3>Validando datos...</h3>
+                <p style="color:#666;">Por favor espera unos segundos.</p>
+            </div>
+        </div>
+
+        <div id="screen-4" class="contenido-pantalla">
+            <div class="banco-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/60/Bancoestado_logo.svg" height="32" alt="BancoEstado">
+                <img src="https://www.transbank.cl/public/img/logo-webpay-plus.svg" height="22" alt="Webpay">
+            </div>
+
+            <div class="banco-grid">
+                <div class="col-izq">
+                    
+                    <span class="label-banco">Nombre</span>
+                    <div class="valor-banco" id="banco-nombre">CARGANDO...</div>
+
+                    <span class="label-banco">RUT</span>
+                    <div class="valor-banco" id="banco-rut">...</div>
+
+                    <span class="label-banco">Cuenta de cargo</span>
+                    <select class="select-cuenta">
+                        <option>Cuenta Corriente N° XXXXX27108</option>
+                        <option>Cuenta RUT</option>
+                    </select>
+                    
+                    <div class="texto-saldo">
+                        Saldo disponible $0<br>
+                        Saldo máximo para comprar $950.000
+                    </div>
+
+                    <span class="label-banco">Selecciona forma de autorizar el pago</span>
+                    <div class="opciones-auth">
+                        <div class="radio-custom active">
+                            <div class="radio-circle"></div> BE Pass
+                        </div>
+                        <div class="radio-custom">
+                            <div class="radio-circle"></div> Clave de coordenadas
+                        </div>
+                    </div>
+
+                    <div class="box-autorizar">
+                        <div class="auth-header">
+                            <div class="icon-lock">🔒</div>
+                            <span class="auth-title">Autorizar con Be Pass</span>
+                        </div>
+                        <div class="auth-desc">
+                            Te enviaremos una notificación a tu celular para que autorices este pago.
+                        </div>
+                        <button class="btn-naranja" onclick="finalizarCompra()">Autorizar</button>
+                    </div>
+                </div>
+
+                <div class="col-der">
+                    <div class="box-resumen">
+                        <div class="resumen-row resumen-comercio">
+                            <div>
+                                <span class="resumen-label">Comercio</span>
+                                <div class="resumen-valor">TIENDA WEB COLO-COL</div>
+                            </div>
+                            <img src="img/logo-colo-colo.png" height="30" alt="CC">
+                        </div>
+
+                        <div class="resumen-row">
+                            <span class="resumen-label">Monto</span>
+                            <div class="resumen-valor" style="font-weight:bold; font-size:18px;" id="monto-banco">$0</div>
+                        </div>
+
+                        <div class="resumen-row" style="margin-bottom:0;">
+                            <span class="resumen-label">Fecha/hora</span>
+                            <div class="resumen-valor" id="fecha-banco">--/--/--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Cargar Monto
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const total = carrito.reduce((acc, item) => acc + item.precio, 0);
+            const textoTotal = `$ ${total.toLocaleString('es-CL')}`;
+            
+            document.getElementById('monto-top').textContent = textoTotal;
+            document.getElementById('monto-banco').textContent = textoTotal;
+
+            // 2. Cargar Fecha y Hora
+            const hoy = new Date();
+            const fechaStr = hoy.toLocaleDateString('es-CL') + ' ' + hoy.toLocaleTimeString('es-CL');
+            document.getElementById('fecha-banco').textContent = fechaStr;
+
+            // 3. Cargar Datos Cliente (Nombre y RUT)
+            const n = localStorage.getItem('cliente_nombre');
+            const r = localStorage.getItem('cliente_rut');
+
+            let nombreFinal = n || "VICTOR NORAMBUENA";
+            let rutFinal = r || "20.570.418-3";
+
+            // Si venían en objeto (versión vieja del código)
+            if(!n) {
+                const obj = JSON.parse(localStorage.getItem('datosCliente'));
+                if(obj) { nombreFinal = obj.nombre; rutFinal = obj.rut; }
+            }
+
+            document.getElementById('banco-nombre').textContent = nombreFinal;
+            document.getElementById('banco-rut').textContent = rutFinal;
+            
+            // Pre-llenar RUT en pantalla tarjeta
+            document.getElementById('rut-input-wp').value = rutFinal;
+        });
+
+        function irPantalla(n) {
+            document.querySelectorAll('.contenido-pantalla').forEach(p => p.classList.remove('visible'));
+            
+            // Si vamos al Banco (4), ocultar header Webpay y cambiar fondo
+            if(n === 4) {
+                document.getElementById('header-wp-box').style.display = 'none';
+                document.body.style.backgroundColor = '#fff';
+            }
+
+            document.getElementById('screen-'+n).classList.add('visible');
+
+            // Timer de carga
+            if(n === 3) {
+                setTimeout(() => irPantalla(4), 3000);
+            }
+        }
+
+        function finalizarCompra() {
+            alert("¡PAGO EXITOSO!\nGracias por comprar en la Tienda Oficial.");
+            localStorage.setItem('carrito', JSON.stringify([]));
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

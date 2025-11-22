@@ -131,14 +131,41 @@
 
         // Finalizar Compra
         document.getElementById('btn-finalizar').addEventListener('click', () => {
+            // Validar que aceptó los términos
             if (!document.getElementById('check-terminos').checked) {
                 alert("Debes aceptar los términos y condiciones.");
                 return;
             }
-            const nombre = document.getElementById('nombre').value || "Hincha";
-            alert(`¡Gracias por tu compra, ${nombre}!\nRedirigiendo a Webpay...`);
-            localStorage.setItem('carrito', JSON.stringify([]));
-            window.location.href = 'index.html';
+
+            // Obtener nombre, apellido y rut del formulario
+            const nombreEl = document.getElementById('nombre');
+            const apellidoEl = document.getElementById('apellido');
+            const rutEl = document.getElementById('rut');
+            const nombre = nombreEl ? nombreEl.value.trim() : '';
+            const apellido = apellidoEl ? apellidoEl.value.trim() : '';
+            const rut = rutEl ? rutEl.value.trim() : '';
+
+            if (!nombre || !apellido) {
+                alert('Debes ingresar nombre y apellido antes de continuar.');
+                // Abrir nuevamente el paso 1 para que el usuario complete los datos
+                abrirPaso(1);
+                return;
+            }
+
+            if (!rut) {
+                alert('Debes ingresar tu RUT en el paso Direcciones antes de continuar.');
+                // Abrir el paso 2 para que complete el RUT
+                abrirPaso(2);
+                return;
+            }
+
+            // Guardar en localStorage para que la página de pago pueda mostrarlo
+            localStorage.setItem('cliente_nombre', nombre);
+            localStorage.setItem('cliente_apellido', apellido);
+            localStorage.setItem('cliente_rut', rut);
+
+            // Redirigir a la simulación de Webpay
+            window.location.href = 'pago.html';
         });
     </script>
 </body>
