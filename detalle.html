@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalle del Producto - Tienda Colo Colo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="img/logo-colo-colo.png" alt="Logo Colo Colo">
+            Tienda Oficial Colo Colo
+        </div>
+    </header>
+
+    <main>
+        <article class="contenedor-detalle" id="contenedor-detalle">
+            <section class="col-izquierda">
+                <img id="img-producto" src="" alt="Imagen producto">
+            </section>
+
+            <section class="col-derecha">
+                <h1 id="nombre-producto">Producto</h1>
+                <p id="precio-producto" class="precio">$0</p>
+                <p id="desc-producto" class="desc">Descripción del producto</p>
+
+                <label for="talla-select">Talla</label>
+                <select id="talla-select">
+                    <option value="S">S</option>
+                    <option value="M" selected>M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                </select>
+
+                <div style="margin-top:18px; display:flex; gap:10px; align-items:center;">
+                    <button id="btn-agregar" class="producto-agregar">Agregar al Carrito</button>
+                    <a href="carrito.html" class="btn-ver-carrito">Ver Carrito</a>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <footer>&copy; 2025 Tienda Oficial Colo Colo</footer>
+
+    <script>
+        // Mock database local
+        const productosDB = {
+            "mati": {
+                nombre: "Matías Fernández",
+                precio: 655000,
+                img: "img/camiseta-mati2006.jpg",
+                descripcion: "Camiseta edición histórica de Matías Fernández, edición 2006."
+            },
+            "barticciotto": {
+                nombre: "Marcelo Barticciotto",
+                precio: 145000,
+                img: "img/camiseta-barticciotto1991.jpg",
+                descripcion: "Camiseta conmemorativa Barticciotto 1991."
+            },
+            "paredes": {
+                nombre: "Paredes",
+                precio: 70000,
+                img: "img/camiseta-paredes30.jpg",
+                descripcion: "Camiseta clásica de Paredes, número 30."
+            },
+            "palacios": {
+                nombre: "Carlos Palacios",
+                precio: 30000,
+                img: "img/camiseta-palacios.jpg",
+                descripcion: "Camiseta edición joya Palacios."
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const cont = document.getElementById('contenedor-detalle');
+
+            if (!id || !productosDB[id]) {
+                cont.innerHTML = '<div class="not-found">Producto no encontrado. <a href="index.html">Volver a tienda</a></div>';
+                return;
+            }
+
+            const producto = productosDB[id];
+
+            // Inject DOM
+            const imgEl = document.getElementById('img-producto');
+            const nombreEl = document.getElementById('nombre-producto');
+            const precioEl = document.getElementById('precio-producto');
+            const descEl = document.getElementById('desc-producto');
+
+            imgEl.src = producto.img;
+            imgEl.alt = producto.nombre;
+            nombreEl.textContent = producto.nombre;
+            precioEl.textContent = `$${producto.precio.toLocaleString('es-CL')} CLP`;
+            descEl.textContent = producto.descripcion;
+
+            // Agregar al carrito
+            document.getElementById('btn-agregar').addEventListener('click', () => {
+                const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                carrito.push({ nombre: producto.nombre, precio: producto.precio });
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                alert(`${producto.nombre} agregado al carrito.`);
+            });
+        });
+    </script>
+</body>
+</html>
