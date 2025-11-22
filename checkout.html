@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra - Tienda Oficial Colo Colo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="img/logo-colo-colo.png" alt="Logo Colo Colo">
+            Tienda Oficial Colo Colo
+        </div>
+    </header>
+
+    <main>
+        <div class="checkout-container">
+
+            <div class="checkout-steps">
+                <h2 style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">Finalizar Compra
+                </h2>
+
+                <div id="paso-1" class="paso-checkout visible">
+                    <div class="paso-header">
+                        <h3>1. Datos Personales</h3>
+                    </div>
+                    <form>
+                        <div class="fila-form">
+                            <div class="campo"><label>Nombre</label><input type="text" id="nombre" required></div>
+                            <div class="campo"><label>Apellidos</label><input type="text" id="apellido" required></div>
+                        </div>
+                        <div class="campo"><label>Correo electrónico</label><input type="email" id="correo" required>
+                        </div>
+                        <button type="button" class="btn-continuar" onclick="irAlPaso(2)">Continuar a
+                            Direcciones</button>
+                    </form>
+                </div>
+
+                <div id="paso-2" class="paso-checkout" hidden>
+                    <div class="paso-header">
+                        <h3>2. Direcciones</h3>
+                    </div>
+                    <form>
+                        <div class="campo"><label>RUT</label><input type="text" id="rut"></div>
+                        <div class="campo"><label>Dirección</label><input type="text" id="direccion"></div>
+                        <div class="botones-nav">
+                            <button type="button" class="btn-volver" onclick="irAlPaso(1)">Volver</button>
+                            <button type="button" class="btn-continuar" onclick="irAlPaso(3)">Continuar a Envío</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="paso-3" class="paso-checkout" hidden>
+                    <div class="paso-header">
+                        <h3>3. Envío</h3>
+                    </div>
+                    <div class="opcion-envio"
+                        style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; display: flex; align-items: center; gap: 10px;">
+                        <input type="radio" checked>
+                        <strong>Chilexpress</strong> - Envío Gratis
+                    </div>
+                    <div class="botones-nav">
+                        <button type="button" class="btn-volver" onclick="irAlPaso(2)">Volver</button>
+                        <button type="button" class="btn-continuar" onclick="irAlPaso(4)">Ir al Pago</button>
+                    </div>
+                </div>
+
+                <div id="paso-4" class="paso-checkout" hidden>
+                    <div class="paso-header">
+                        <h3>4. Pago</h3>
+                    </div>
+                    <div class="opcion-pago">
+                        <p>Webpay Plus (Simulación)</p>
+                        <img src="img/transbank.png" alt="Webpay Plus" style="width: 150px;">
+                    </div>
+                    <div class="botones-nav">
+                        <button type="button" class="btn-volver" onclick="irAlPaso(3)">Volver</button>
+                        <button type="button" id="btn-finalizar" class="btn-pagar">Pagar y Finalizar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-summary">
+                <h4>Resumen del pedido</h4>
+                <ul id="lista-resumen-checkout" style="list-style: none; padding: 0;"></ul>
+                <div class="resumen-total-bloque">
+                    <h3>Total a Pagar: <span id="total-checkout">$0</span></h3>
+                </div>
+                <p style="margin-top: 20px; font-size: 0.9em;"><a href="carrito.html">Volver al carrito</a></p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>&copy; 2025 Tienda Oficial Colo Colo</footer>
+
+    <script>
+        // 1. Cargar carrito al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const lista = document.getElementById('lista-resumen-checkout');
+            const totalSpan = document.getElementById('total-checkout');
+            let total = 0;
+
+            // Si no hay nada, mandar de vuelta al inicio
+            if (carrito.length === 0) {
+                alert("Tu carrito está vacío");
+                window.location.href = "index.html";
+            }
+
+            carrito.forEach(item => {
+                const li = document.createElement('li');
+                li.style.borderBottom = '1px solid #eee';
+                li.style.padding = '5px 0';
+                li.textContent = `${item.nombre} - $${item.precio.toLocaleString('es-CL')}`;
+                lista.appendChild(li);
+                total += item.precio;
+            });
+            totalSpan.textContent = `$${total.toLocaleString('es-CL')}`;
+        });
+
+        // 2. Navegación entre pasos (Wizard)
+        window.irAlPaso = function (n) {
+            document.querySelectorAll('.paso-checkout').forEach(p => {
+                p.classList.remove('visible');
+                p.hidden = true;
+            });
+            const paso = document.getElementById('paso-' + n);
+            paso.classList.add('visible');
+            paso.hidden = false;
+        };
+
+        // 3. Finalizar Compra
+        document.getElementById('btn-finalizar').addEventListener('click', () => {
+            const nombre = document.getElementById('nombre').value || "Cliente";
+            alert(`¡Gracias por tu compra, ${nombre}!\n\nSimulación de pago exitosa.`);
+            localStorage.setItem('carrito', JSON.stringify([])); // Vaciar carrito
+            window.location.href = 'index.html'; // Volver al inicio
+        });
+    </script>
+</body>
+
+</html>

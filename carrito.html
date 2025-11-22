@@ -4,10 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Carrito - Tienda Oficial Colo Colo</title>
-
+    <title>Tu Carrito - Tienda Oficial Colo Colo</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -29,54 +27,43 @@
     </header>
 
     <main>
-        <section id="carrito">
-            <h2>Carrito de Compras</h2>
-            <h3>cada conpra participa por una gata fea</h3>
-            <p id="carrito-vacio" class="mensaje-vacio" hidden>Tu carrito está vacío. Agrega productos desde la tienda.</p>
-            <ul id="lista-carrito"></ul>
-            <p>Total: <span id="total">0</span> CLP</p>
-            <button id="btn-comprar">Comprar Ahora</button>
-            <p><a href="index.html#productos">Volver a productos</a></p>
-        </section>
-         <section id="modal-pago" class="modal" aria-hidden="true">
-            <div class="modal-contenido">
-                <button id="cerrar-modal" class="btn-cerrar" aria-label="Cerrar">×</button>
-                <h3>Finalizar compra</h3>
-                <p class="texto-secundario">Selecciona tu método de pago y confirma el pedido.</p>
+        <section class="contenedor-carrito">
+            <h2>Tu Carrito de Compras</h2>
 
-                <div class="resumen-compra">
-                    <h4>Resumen</h4>
-                    <ul id="resumen-items"></ul>
-                    <p class="total-modal">Total: <span id="resumen-total">$0 CLP</span></p>
+            <div id="carrito-vacio" class="mensaje-vacio" style="display: none;">
+                <p>Tu carrito está vacío.</p>
+                <a href="index.html#productos" class="btn-volver">Ir a la tienda</a>
+            </div>
+
+            <div id="contenido-carrito">
+                <div class="tabla-resumen">
+                    <ul id="lista-carrito" class="lista-items">
+                    </ul>
                 </div>
 
-                <form id="form-pago">
-                    <label for="correo">Correo de contacto</label>
-                    <input type="email" id="correo" name="correo" placeholder="tu@correo.cl" required>
-
-                    <label for="metodo">Método de pago</label>
-                    <select id="metodo" name="metodo" required>
-                        <option value="paypal">PayPal</option>
-                        <option value="tarjeta">Tarjeta de crédito/débito</option>
-                    </select>
-
-                    <p class="nota-pago">Usamos el total para construir un enlace de ejemplo de PayPal. No se efectuará un cobro real.</p>
-
-                    <div class="acciones-modal">
-                        <button type="button" id="btn-cancelar" class="btn-secundario">Seguir comprando</button>
-                        <button type="submit" class="btn-principal">Pagar ahora</button>
+                <div class="footer-carrito">
+                    <div class="total-bloque">
+                        <h3>Total a Pagar: <span id="total">0</span> CLP</h3>
                     </div>
-                </form>
+
+                    <div class="acciones-carrito">
+                        <a href="index.html#productos" class="enlace-volver">← Seguir comprando</a>
+
+                        <a href="checkout.html" class="btn-pagar-final">
+                            Ir a Pagar
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
-
     </main>
 
     <footer>
-        &copy; 2024 Tienda Oficial Colo Colo - Todos los derechos reservados
+        &copy; 2025 Tienda Oficial Colo Colo - Todos los derechos reservados
     </footer>
 
     <script>
+        // Menú Hamburguesa
         function toggleMenu() {
             const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('show');
@@ -85,37 +72,37 @@
         document.addEventListener('DOMContentLoaded', () => {
             const listaCarrito = document.getElementById('lista-carrito');
             const totalSpan = document.getElementById('total');
-            const btnComprar = document.getElementById('btn-comprar');
-            const modalPago = document.getElementById('modal-pago');
-            const resumenItems = document.getElementById('resumen-items');
-            const resumenTotal = document.getElementById('resumen-total');
-            const btnCancelar = document.getElementById('btn-cancelar');
-            const btnCerrar = document.getElementById('cerrar-modal');
-            const formularioPago = document.getElementById('form-pago');
-            const correoInput = document.getElementById('correo');
+            const divVacio = document.getElementById('carrito-vacio');
+            const divContenido = document.getElementById('contenido-carrito');
+
             function obtenerCarrito() {
-                const datosGuardados = localStorage.getItem('carrito');
-                return datosGuardados ? JSON.parse(datosGuardados) : [];
+                const datos = localStorage.getItem('carrito');
+                return datos ? JSON.parse(datos) : [];
             }
 
-            function guardarCarrito(carrito) {
-                localStorage.setItem('carrito', JSON.stringify(carrito));
-            }
-
-            function actualizarCarrito() {
+            function actualizarVista() {
                 const carrito = obtenerCarrito();
                 listaCarrito.innerHTML = '';
-                const carritoVacio = document.getElementById('carrito-vacio');
                 let total = 0;
 
                 if (carrito.length === 0) {
-                    carritoVacio.hidden = false;
+                    // Mostrar mensaje vacío y ocultar resumen
+                    divVacio.style.display = 'block';
+                    divContenido.style.display = 'none';
                 } else {
-                    carritoVacio.hidden = true;
+                    // Mostrar resumen y ocultar mensaje vacío
+                    divVacio.style.display = 'none';
+                    divContenido.style.display = 'block';
 
-                    carrito.forEach(item => {
+                    // Generar lista de productos
+                    carrito.forEach((item, index) => {
                         const li = document.createElement('li');
-                        li.textContent = `${item.nombre} - $${item.precio.toLocaleString('es-CL')} CLP`;
+                        li.classList.add('item-carrito');
+                        li.innerHTML = `
+                            <span class="nombre-prod"><b>${item.nombre}</b></span>
+                            <span class="precio-prod">$${item.precio.toLocaleString('es-CL')}</span>
+                            <button onclick="eliminarItem(${index})" class="btn-eliminar" title="Eliminar">✕</button>
+                        `;
                         listaCarrito.appendChild(li);
                         total += item.precio;
                     });
@@ -124,68 +111,15 @@
                 totalSpan.textContent = total.toLocaleString('es-CL');
             }
 
-            btnComprar.addEventListener('click', () => {
-                const carrito = obtenerCarrito();
+            // Función extra para eliminar productos (Opcional pero útil)
+            window.eliminarItem = function (index) {
+                let carrito = obtenerCarrito();
+                carrito.splice(index, 1); // Quita el elemento
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                actualizarVista();
+            };
 
-                if (carrito.length === 0) {
-                    alert('Tu carrito está vacío. Agrega productos para comprar.');
-                    return;
-                }
-                mostrarModalPago(carrito);
-            });
-
-            function mostrarModalPago(carrito) {
-                resumenItems.innerHTML = '';
-                let total = 0;
-
-                carrito.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = `${item.nombre} - $${item.precio.toLocaleString('es-CL')} CLP`;
-                    resumenItems.appendChild(li);
-                    total += item.precio;
-                });
-
-                resumenTotal.textContent = `$${total.toLocaleString('es-CL')} CLP`;
-                modalPago.classList.add('visible');
-                modalPago.setAttribute('aria-hidden', 'false');
-                correoInput.focus();
-            }
-
-            function cerrarModal() {
-                modalPago.classList.remove('visible');
-                modalPago.setAttribute('aria-hidden', 'true');
-            }
-
-            btnCancelar.addEventListener('click', cerrarModal);
-            btnCerrar.addEventListener('click', cerrarModal);
-
-            modalPago.addEventListener('click', (evento) => {
-                if (evento.target === modalPago) {
-                    cerrarModal();
-                }
-            });
-
-            formularioPago.addEventListener('submit', (evento) => {
-                evento.preventDefault();
-                const carrito = obtenerCarrito();
-                const total = carrito.reduce((acum, item) => acum + item.precio, 0);
-                const metodo = document.getElementById('metodo').value;
-                const correo = correoInput.value;
-
-                if (metodo === 'paypal') {
-                    const urlPaypal = `https://www.paypal.com/checkoutnow?amount=${encodeURIComponent(total)}&currencyCode=CLP`;
-                    window.open(urlPaypal, '_blank');
-                }
-
-                alert(`¡Gracias por tu compra, ${correo}!\nMétodo: ${metodo === 'paypal' ? 'PayPal' : 'Tarjeta'}\nTotal: $${total.toLocaleString('es-CL')} CLP`);
-                
-
-                guardarCarrito([]);
-                actualizarCarrito();
-                cerrarModal();
-            });
-
-            actualizarCarrito();
+            actualizarVista();
         });
     </script>
 </body>
