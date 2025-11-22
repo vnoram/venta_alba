@@ -18,7 +18,7 @@
             Tienda Oficial Colo Colo
         </div>
         <nav>
-            <span class="menu-toggle" onclick="toggleMenu()">☰</span>
+            <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Abrir menú">☰</button>
             <ul id="nav-links">
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#productos">Productos</a></li>
@@ -38,18 +38,18 @@
 
                 <div class="producto">
                     <img src="img/camiseta-mati2006.jpg" alt="Camiseta Matías Fernández 2006">
-                <h3 class="producto-nombre">Matías Fernández</h3>
-                <h3 style="color: red;">Mejor jugador de Sudamérica 2006</h3>
-                <p>$64.500 CLP</p>
-                <button>Agregar al carrito</button>
-            </div>
+                    <h3 class="producto-nombre">Matías Fernández</h3>
+                    <p class="producto-detalle">Mejor jugador de Sudamérica 2006</p>
+                    <p class="producto-precio">$64.500 CLP</p>
+                    <button type="button">Agregar al carrito</button>
+                </div>
 
                 <div class="producto">
                     <img src="img/camiseta-barticciotto1991.jpg" alt="Camiseta Marcelo Barticciotto 1991">
                     <h3 class="producto-nombre">Marcelo Barticciotto</h3>
-                    <p>$145.000 CLP</p>
-                    <button>Agregar al carrito</button>
-                </div>
+                    <p class="producto-precio">$140.000 CLP</p>
+                    <button type="button">Agregar al carrito</button>
+                    </div>
 
                 <div class="producto">
                     <img src="img/camiseta-paredes30.jpg" alt="Camiseta Paredes">
@@ -61,9 +61,9 @@
                 <div class="producto">
                     <img src="img/camiseta-palacios.jpg" alt="Camiseta Carlos Palacios">
                     <h3 class="producto-nombre">Carlos Palacios</h3>
-                    <h3 style="color: red;">Edición especial 2024 usada por el mejor jugador de chile y el mundo</h3>
-                    <p>$370.000 CLP</p>
-                    <button>Agregar al carrito</button>
+                    <p class="producto-detalle">Edición especial 2024</p>
+                    <p class="producto-precio">$370.000 CLP</p>
+                    <button type="button">Agregar al carrito</button>
                 </div>
 
             </div>
@@ -90,36 +90,41 @@
     </footer>
 
     <script>
+        const navLinks = document.getElementById('nav-links');
         function toggleMenu() {
-            const navLinks = document.getElementById('nav-links');
             navLinks.classList.toggle('show');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        function obtenerCarrito() {
+            const datosGuardados = localStorage.getItem('carrito');
+            return datosGuardados ? JSON.parse(datosGuardados) : [];
+        }
+
+        function guardarCarrito(carrito) {
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+        }
+
+        function limpiarPrecio(texto) {
+            return Number(texto.replace(/[^0-9]/g, '')) || 0;
+        }
+                document.addEventListener('DOMContentLoaded', () => {
 
             const botonesAgregar = document.querySelectorAll('.producto button');
-                function obtenerCarrito() {
-                const datosGuardados = localStorage.getItem('carrito');
-                return datosGuardados ? JSON.parse(datosGuardados) : [];
-            }                                   
-            function guardarCarrito(carrito) {
-                localStorage.setItem('carrito', JSON.stringify(carrito));
-            }
-
+                
             botonesAgregar.forEach(boton => {
                 boton.addEventListener('click', () => {
                     const productoDiv = boton.closest('.producto');
                     const nombre = productoDiv.querySelector('.producto-nombre').textContent;
-                    const precioTexto = productoDiv.querySelector('p').textContent;
-                    const precio = parseInt(precioTexto.replace(/\$|\.| CLP/g, ''));
-            const carrito = obtenerCarrito();
+
+                    const precioTexto = productoDiv.querySelector('.producto-precio').textContent;
+                    const precio = limpiarPrecio(precioTexto);
+                    const carrito = obtenerCarrito();
                     carrito.push({ nombre, precio });
                     guardarCarrito(carrito);
 
             alert('Producto agregado al carrito. Puedes revisarlo en la sección Carrito.');
                 });
             });
-
         });
     </script>
 </body>

@@ -48,10 +48,10 @@
 
                     <div class="acciones-carrito">
                         <a href="index.html#productos" class="enlace-volver">← Seguir comprando</a>
-
-                        <a href="checkout.html" class="btn-pagar-final">
-                            Ir a Pagar
-                        </a>
+                        <button id="abrir-modal-pago" type="button" class="btn-pagar-final">
+                            Revisar pago rápido
+                        </button>
+                        <a href="checkout.html" class="btn-pagar-final">Ir a Pagar</a>
                     </div>
                 </div>
             </div>
@@ -61,6 +61,29 @@
     <footer>
         &copy; 2025 Tienda Oficial Colo Colo - Todos los derechos reservados
     </footer>
+    <div id="modal-pago" class="modal" aria-hidden="true">
+        <div class="modal-contenido">
+            <button id="cerrar-modal" class="btn-cerrar" type="button" aria-label="Cerrar">✕</button>
+            <h3>Resumen de la compra</h3>
+            <p class="texto-secundario">Verifica los artículos antes de confirmar tu correo.</p>
+
+            <div class="resumen-compra">
+                <ul id="resumen-items"></ul>
+                <p class="total-modal">Total: <span id="resumen-total">0</span> CLP</p>
+            </div>
+
+            <form id="form-pago">
+                <label for="correo">Correo electrónico</label>
+                <input id="correo" name="correo" type="email" placeholder="nombre@correo.cl" required>
+                <p class="nota-pago">Enviaremos el comprobante a este correo.</p>
+
+                <div class="acciones-modal">
+                    <button id="btn-cancelar" class="btn-secundario" type="button">Cancelar</button>
+                    <button class="btn-principal" type="submit">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
         // Menú Hamburguesa
@@ -74,10 +97,42 @@
             const totalSpan = document.getElementById('total');
             const divVacio = document.getElementById('carrito-vacio');
             const divContenido = document.getElementById('contenido-carrito');
+            const modal = document.getElementById('modal-pago');
+            const resumenItems = document.getElementById('resumen-items');
+            const resumenTotal = document.getElementById('resumen-total');
+            const abrirModalPago = document.getElementById('abrir-modal-pago');
+            const cerrarModal = document.getElementById('cerrar-modal');
+            const btnCancelar = document.getElementById('btn-cancelar');
+            const formPago = document.getElementById('form-pago');
 
             function obtenerCarrito() {
                 const datos = localStorage.getItem('carrito');
                 return datos ? JSON.parse(datos) : [];
+            }
+            function renderizarResumen(carrito) {
+                resumenItems.innerHTML = '';
+                let total = 0;
+
+                carrito.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = `${item.nombre} - $${item.precio.toLocaleString('es-CL')}`;
+                    resumenItems.appendChild(li);
+                    total += item.precio;
+                });
+
+                resumenTotal.textContent = total.toLocaleString('es-CL');
+            }
+
+            function abrirModal() {
+                const carrito = obtenerCarrito();
+                renderizarResumen(carrito);
+                modal.classList.add('visible');
+                modal.setAttribute('aria-hidden', 'false');
+            }
+
+            function cerrarModalPago() {
+                modal.classList.remove('visible');
+                modal.setAttribute('aria-hidden', 'true');
             }
 
             function actualizarVista() {
@@ -120,6 +175,22 @@
             };
 
             actualizarVista();
+
+            abrirModalPago.addEventListener('click', abrirModal);
+            cerrarModal.addEventListener('click', cerrarModalPago);
+            btnCancelar.addEventListener('click', cerrarModalPago);
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    cerrarModalPago();
+                }
+            });
+
+            formPago.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const correoInput = document.getElementById('correo');
+                alert(`Confirmamos tu pago. Se enviará un comprobante a ${correoInput.value}.`);
+                cerrarModalPago();
+            });
         });
     </script>
 </body>
