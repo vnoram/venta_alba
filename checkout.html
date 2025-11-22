@@ -19,127 +19,126 @@
 
     <main>
         <div class="checkout-container">
+            <h2 style="margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">Checkout</h2>
 
-            <div class="checkout-steps">
-                <h2 style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">Finalizar Compra
-                </h2>
+            <div class="accordion-checkout">
 
-                <div id="paso-1" class="paso-checkout visible">
-                    <div class="paso-header">
-                        <h3>1. Datos Personales</h3>
+                <div id="step-1" class="step-item active">
+                    <div class="step-header">
+                        <span class="step-title">1 Datos Personales</span>
+                        <span class="step-check">✔</span>
+                        <button class="btn-editar" onclick="abrirPaso(1)">✎ Editar</button>
                     </div>
-                    <form>
-                        <div class="fila-form">
-                            <div class="campo"><label>Nombre</label><input type="text" id="nombre" required></div>
-                            <div class="campo"><label>Apellidos</label><input type="text" id="apellido" required></div>
+                    <div class="step-body">
+                        <form id="form-1">
+                            <div class="fila-form">
+                                <div class="campo"><label>Nombre</label><input type="text" id="nombre" required></div>
+                                <div class="campo"><label>Apellidos</label><input type="text" id="apellido" required>
+                                </div>
+                            </div>
+                            <div class="campo"><label>Correo electrónico</label><input type="email" id="correo"
+                                    required></div>
+                            <button type="button" class="btn-continuar" onclick="completarPaso(1)">Continuar</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="step-2" class="step-item">
+                    <div class="step-header">
+                        <span class="step-title">2 Direcciones</span>
+                        <span class="step-check">✔</span>
+                        <button class="btn-editar" onclick="abrirPaso(2)">✎ Editar</button>
+                    </div>
+                    <div class="step-body">
+                        <form id="form-2">
+                            <div class="campo"><label>RUT</label><input type="text" id="rut"></div>
+                            <div class="campo"><label>Dirección</label><input type="text" id="direccion"></div>
+                            <button type="button" class="btn-continuar" onclick="completarPaso(2)">Continuar</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="step-3" class="step-item">
+                    <div class="step-header">
+                        <span class="step-title">3 Método de envío</span>
+                        <span class="step-check">✔</span>
+                        <button class="btn-editar" onclick="abrirPaso(3)">✎ Editar</button>
+                    </div>
+                    <div class="step-body">
+                        <div class="opcion-envio-box">
+                            <input type="radio" checked>
+                            <div>
+                                <strong>Chilexpress - Envío a Domicilio</strong>
+                                <p style="margin:0; color:green; font-size:0.9em;">Gratis</p>
+                            </div>
                         </div>
-                        <div class="campo"><label>Correo electrónico</label><input type="email" id="correo" required>
+                        <button type="button" class="btn-continuar" onclick="completarPaso(3)">Continuar</button>
+                    </div>
+                </div>
+
+                <div id="step-4" class="step-item">
+                    <div class="step-header">
+                        <span class="step-title">4 Pago</span>
+                    </div>
+                    <div class="step-body">
+                        <div class="pago-box">
+                            <p>Pago con tarjetas de crédito o Redcompra</p>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="radio" name="pago" checked>
+                                <img src="img/transbank.png" alt="Webpay" width="180">
+                            </div>
                         </div>
-                        <button type="button" class="btn-continuar" onclick="irAlPaso(2)">Continuar a
-                            Direcciones</button>
-                    </form>
-                </div>
 
-                <div id="paso-2" class="paso-checkout" hidden>
-                    <div class="paso-header">
-                        <h3>2. Direcciones</h3>
-                    </div>
-                    <form>
-                        <div class="campo"><label>RUT</label><input type="text" id="rut"></div>
-                        <div class="campo"><label>Dirección</label><input type="text" id="direccion"></div>
-                        <div class="botones-nav">
-                            <button type="button" class="btn-volver" onclick="irAlPaso(1)">Volver</button>
-                            <button type="button" class="btn-continuar" onclick="irAlPaso(3)">Continuar a Envío</button>
+                        <div class="terminos">
+                            <input type="checkbox" id="check-terminos">
+                            <label for="check-terminos">Estoy de acuerdo con los <a href="#">términos del servicio</a> y
+                                los acepto sin reservas.</label>
                         </div>
-                    </form>
-                </div>
 
-                <div id="paso-3" class="paso-checkout" hidden>
-                    <div class="paso-header">
-                        <h3>3. Envío</h3>
-                    </div>
-                    <div class="opcion-envio"
-                        style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; display: flex; align-items: center; gap: 10px;">
-                        <input type="radio" checked>
-                        <strong>Chilexpress</strong> - Envío Gratis
-                    </div>
-                    <div class="botones-nav">
-                        <button type="button" class="btn-volver" onclick="irAlPaso(2)">Volver</button>
-                        <button type="button" class="btn-continuar" onclick="irAlPaso(4)">Ir al Pago</button>
+                        <button type="button" id="btn-finalizar" class="btn-pagar-rojo">Confirmar medio de pago</button>
                     </div>
                 </div>
 
-                <div id="paso-4" class="paso-checkout" hidden>
-                    <div class="paso-header">
-                        <h3>4. Pago</h3>
-                    </div>
-                    <div class="opcion-pago">
-                        <p>Webpay Plus (Simulación)</p>
-                        <img src="img/transbank.png" alt="Webpay Plus" style="width: 150px;">
-                    </div>
-                    <div class="botones-nav">
-                        <button type="button" class="btn-volver" onclick="irAlPaso(3)">Volver</button>
-                        <button type="button" id="btn-finalizar" class="btn-pagar">Pagar y Finalizar</button>
-                    </div>
-                </div>
             </div>
 
-            <div class="checkout-summary">
-                <h4>Resumen del pedido</h4>
-                <ul id="lista-resumen-checkout" style="list-style: none; padding: 0;"></ul>
-                <div class="resumen-total-bloque">
-                    <h3>Total a Pagar: <span id="total-checkout">$0</span></h3>
-                </div>
-                <p style="margin-top: 20px; font-size: 0.9em;"><a href="carrito.html">Volver al carrito</a></p>
-            </div>
-
+            <p style="margin-top: 20px; text-align: center;"><a href="carrito.html" style="color:#666;">Volver al
+                    carrito</a></p>
         </div>
     </main>
 
     <footer>&copy; 2025 Tienda Oficial Colo Colo</footer>
 
     <script>
-        // 1. Cargar carrito al iniciar
-        document.addEventListener('DOMContentLoaded', () => {
-            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            const lista = document.getElementById('lista-resumen-checkout');
-            const totalSpan = document.getElementById('total-checkout');
-            let total = 0;
+        // Lógica del Acordeón
+        function abrirPaso(n) {
+            // Quita la clase active de todos y se la pone al seleccionado
+            document.querySelectorAll('.step-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('step-' + n).classList.add('active');
+        }
 
-            // Si no hay nada, mandar de vuelta al inicio
-            if (carrito.length === 0) {
-                alert("Tu carrito está vacío");
-                window.location.href = "index.html";
+        function completarPaso(n) {
+            // Marca el actual como completado
+            const pasoActual = document.getElementById('step-' + n);
+            pasoActual.classList.add('completed');
+            pasoActual.classList.remove('active');
+
+            // Abre el siguiente
+            const siguiente = n + 1;
+            if (document.getElementById('step-' + siguiente)) {
+                document.getElementById('step-' + siguiente).classList.add('active');
             }
+        }
 
-            carrito.forEach(item => {
-                const li = document.createElement('li');
-                li.style.borderBottom = '1px solid #eee';
-                li.style.padding = '5px 0';
-                li.textContent = `${item.nombre} - $${item.precio.toLocaleString('es-CL')}`;
-                lista.appendChild(li);
-                total += item.precio;
-            });
-            totalSpan.textContent = `$${total.toLocaleString('es-CL')}`;
-        });
-
-        // 2. Navegación entre pasos (Wizard)
-        window.irAlPaso = function (n) {
-            document.querySelectorAll('.paso-checkout').forEach(p => {
-                p.classList.remove('visible');
-                p.hidden = true;
-            });
-            const paso = document.getElementById('paso-' + n);
-            paso.classList.add('visible');
-            paso.hidden = false;
-        };
-
-        // 3. Finalizar Compra
+        // Finalizar Compra
         document.getElementById('btn-finalizar').addEventListener('click', () => {
-            const nombre = document.getElementById('nombre').value || "Cliente";
-            alert(`¡Gracias por tu compra, ${nombre}!\n\nSimulación de pago exitosa.`);
-            localStorage.setItem('carrito', JSON.stringify([])); // Vaciar carrito
-            window.location.href = 'index.html'; // Volver al inicio
+            if (!document.getElementById('check-terminos').checked) {
+                alert("Debes aceptar los términos y condiciones.");
+                return;
+            }
+            const nombre = document.getElementById('nombre').value || "Hincha";
+            alert(`¡Gracias por tu compra, ${nombre}!\nRedirigiendo a Webpay...`);
+            localStorage.setItem('carrito', JSON.stringify([]));
+            window.location.href = 'index.html';
         });
     </script>
 </body>

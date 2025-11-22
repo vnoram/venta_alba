@@ -422,3 +422,146 @@ footer a:hover {
 .enlace-volver:hover {
     text-decoration: underline;
 }
+
+/* --- ESTILOS ACORDEÓN CHECKOUT (COLO-COLO STYLE) --- */
+
+.checkout-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+}
+
+.accordion-checkout {
+    border-top: 1px solid #eee;
+}
+
+.step-item {
+    border-bottom: 1px solid #eee;
+}
+
+/* Encabezado del Paso */
+.step-header {
+    padding: 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    transition: background 0.3s;
+}
+
+.step-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #999;
+    /* Gris cuando está inactivo */
+}
+
+.step-check {
+    display: none;
+    color: #000;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-left: 10px;
+}
+
+.btn-editar {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 0.9em;
+    display: none;
+    /* Oculto por defecto */
+}
+
+.btn-editar:hover {
+    text-decoration: underline;
+}
+
+/* Cuerpo del Paso (El formulario) */
+.step-body {
+    display: none;
+    /* Oculto por defecto */
+    padding: 0 20px 30px 20px;
+}
+
+/* --- ESTADOS DEL ACORDEÓN --- */
+
+/* 1. Estado ACTIVO (Editando) */
+.step-item.active .step-title {
+    color: #000;
+    /* Negro fuerte */
+    font-size: 1.3em;
+}
+
+.step-item.active .step-body {
+    display: block;
+    /* Muestra el formulario */
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* 2. Estado COMPLETADO (Cerrado pero listo) */
+.step-item.completed .step-title {
+    color: #555;
+}
+
+.step-item.completed .step-check {
+    display: inline-block;
+    /* Muestra el check */
+}
+
+.step-item.completed .btn-editar {
+    display: inline-block;
+    /* Muestra botón editar */
+}
+
+/* --- ELEMENTOS INTERNOS --- */
+.opcion-envio-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 4px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: #f9f9f9;
+    margin-bottom: 15px;
+}
+
+.btn-pagar-rojo {
+    background-color: #E30613;
+    /* Rojo oficial */
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.btn-pagar-rojo:hover {
+    background-color: #c20510;
+}
+
+.terminos {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
