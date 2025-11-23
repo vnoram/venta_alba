@@ -34,8 +34,10 @@
                 </select>
 
                 <div style="margin-top:18px; display:flex; gap:10px; align-items:center;">
-                    <button id="btn-agregar" class="producto-agregar">Agregar al Carrito</button>
-                    <a href="carrito.html" class="btn-ver-carrito">Ver Carrito</a>
+                    <button id="btn-agregar" class="btn producto-agregar">Agregar al Carrito</button>
+                    <a href="carrito.html" class="btn btn-ver-carrito">Ver Carrito</a>
+                    <button id="btn-volver" class="btn btn-volver" type="button">Volver</button>
+                    <a href="index.html" class="btn btn-inicio">Inicio</a>
                 </div>
             </section>
         </article>
@@ -96,13 +98,22 @@
             precioEl.textContent = `$${producto.precio.toLocaleString('es-CL')} CLP`;
             descEl.textContent = producto.descripcion;
 
-            // Agregar al carrito
-            document.getElementById('btn-agregar').addEventListener('click', () => {
-                const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-                carrito.push({ nombre: producto.nombre, precio: producto.precio });
-                localStorage.setItem('carrito', JSON.stringify(carrito));
-                alert(`${producto.nombre} agregado al carrito.`);
-            });
+            // Agregar al carrito (y redirigir al inicio automáticamente)
+            const btnAgregar = document.getElementById('btn-agregar');
+            if (btnAgregar) {
+                btnAgregar.addEventListener('click', () => {
+                    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                    carrito.push({ nombre: producto.nombre, precio: producto.precio });
+                    localStorage.setItem('carrito', JSON.stringify(carrito));
+                    alert(`${producto.nombre} agregado al carrito.`);
+                    // Después de confirmar (alert), redirigir al inicio
+                    window.location.href = 'index.html';
+                });
+            }
+
+            // Botón Volver (historial) y botón Inicio (link ya presente)
+            const btnVolver = document.getElementById('btn-volver');
+            if (btnVolver) btnVolver.addEventListener('click', () => window.history.back());
         });
     </script>
 </body>

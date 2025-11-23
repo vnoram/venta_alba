@@ -30,9 +30,9 @@
         <section class="contenedor-carrito">
             <h2>Tu Carrito de Compras</h2>
 
-            <div id="carrito-vacio" class="mensaje-vacio" style="display: none;">
+                <div id="carrito-vacio" class="mensaje-vacio" style="display: none;">
                 <p>Tu carrito está vacío.</p>
-                <a href="index.html#productos" class="btn-volver">Ir a la tienda</a>
+                <a href="index.html#productos" class="btn btn-volver">Ir a la tienda</a>
             </div>
 
             <div id="contenido-carrito">
@@ -48,10 +48,10 @@
 
                     <div class="acciones-carrito">
                         <a href="index.html#productos" class="enlace-volver">← Seguir comprando</a>
-                        <button id="abrir-modal-pago" type="button" class="btn-pagar-final">
+                        <button id="abrir-modal-pago" type="button" class="btn btn-pagar-final">
                             Revisar pago rápido
                         </button>
-                        <a href="checkout.html" class="btn-pagar-final">Ir a Pagar</a>
+                        <a href="checkout.html" class="btn btn-pagar-final">Ir a Pagar</a>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
     </footer>
     <div id="modal-pago" class="modal" aria-hidden="true">
         <div class="modal-contenido">
-            <button id="cerrar-modal" class="btn-cerrar" type="button" aria-label="Cerrar">✕</button>
+            <button id="cerrar-modal" class="btn btn-cerrar" type="button" aria-label="Cerrar">✕</button>
             <h3>Resumen de la compra</h3>
             <p class="texto-secundario">Verifica los artículos antes de confirmar tu correo.</p>
 
@@ -78,8 +78,8 @@
                 <p class="nota-pago">Enviaremos el comprobante a este correo.</p>
 
                 <div class="acciones-modal">
-                    <button id="btn-cancelar" class="btn-secundario" type="button">Cancelar</button>
-                    <button class="btn-principal" type="submit">Confirmar</button>
+                    <button id="btn-cancelar" class="btn btn-secundario" type="button">Cancelar</button>
+                    <button class="btn btn-principal" type="submit">Confirmar</button>
                 </div>
             </form>
         </div>
@@ -156,7 +156,7 @@
                         li.innerHTML = `
                             <span class="nombre-prod"><b>${item.nombre}</b></span>
                             <span class="precio-prod">$${item.precio.toLocaleString('es-CL')}</span>
-                            <button onclick="eliminarItem(${index})" class="btn-eliminar" title="Eliminar">✕</button>
+                            <button onclick="eliminarItem(${index})" class="btn btn-eliminar" title="Eliminar">✕</button>
                         `;
                         listaCarrito.appendChild(li);
                         total += item.precio;
