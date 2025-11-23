@@ -44,14 +44,12 @@
             margin-bottom: 20px;
         }
 
-        /* Grilla Principal */
         .banco-grid {
             display: grid;
-            grid-template-columns: 1.4fr 1fr; /* Izquierda más ancha */
+            grid-template-columns: 1.4fr 1fr;
             gap: 40px;
         }
 
-        /* Textos Etiquetas */
         .label-banco {
             font-weight: bold;
             color: #333;
@@ -66,7 +64,6 @@
             text-transform: uppercase;
         }
 
-        /* Dropdown Cuenta */
         .select-cuenta {
             width: 100%;
             padding: 10px;
@@ -84,7 +81,6 @@
             margin-bottom: 20px;
         }
 
-        /* Radio Buttons Personalizados */
         .opciones-auth {
             display: flex;
             gap: 20px;
@@ -107,7 +103,7 @@
             position: relative;
         }
         .radio-custom.active .radio-circle {
-            border-color: #F58220; /* Naranja Banco */
+            border-color: #F58220;
         }
         .radio-custom.active .radio-circle::after {
             content: '';
@@ -121,7 +117,14 @@
             transform: translate(-50%, -50%);
         }
 
-        /* Caja Autorizar (Be Pass) */
+        /* Modal simple para solicitar clave de coordenadas */
+        #modal-clave { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1200; }
+        #modal-clave.visible { display:flex; }
+        #modal-clave .modal-contenido { background:#fff; padding:20px; border-radius:8px; max-width:420px; width:92%; box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
+        #modal-clave .modal-contenido h3 { margin-top:0; }
+        #modal-clave #solicitud-coord { margin:10px 0 6px 0; font-weight:bold; }
+        #modal-clave #input-clave { width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box; }
+
         .box-autorizar {
             border: 1px solid #ddd;
             border-radius: 6px;
@@ -136,7 +139,7 @@
             margin-bottom: 10px;
         }
         .icon-lock {
-            background-color: #00C853; /* Verde */
+            background-color: #00C853;
             color: white;
             width: 30px;
             height: 30px;
@@ -163,7 +166,6 @@
         }
         .btn-naranja:hover { background: #EF6C00; }
 
-        /* Columna Derecha (Resumen) */
         .box-resumen {
             background-color: #f7f7f7;
             padding: 20px;
@@ -178,7 +180,7 @@
             align-items: flex-start;
         }
 
-        /* Estilos Generales Webpay (Pantallas 1, 2, 3) */
+        /* Estilos Generales Webpay */
         .header-webpay { padding: 20px 40px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .info-top { background: #f9f9f9; padding: 20px 40px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; }
         .btn-metodo { border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 15px; border-radius: 8px; }
@@ -190,7 +192,6 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Ajuste Móvil */
         @media (max-width: 700px) {
             .banco-grid { grid-template-columns: 1fr; }
         }
@@ -203,7 +204,7 @@
 
         <div id="header-wp-box">
             <div class="header-webpay">
-                <img src="https://www.transbank.cl/public/img/logo-webpay-plus.svg" height="40" alt="Webpay">
+                <img src="img/webpay-plus.png" height="40" alt="Webpay">
             </div>
             <div class="info-top">
                 <div>
@@ -238,12 +239,12 @@
         <div id="screen-2" class="contenido-pantalla">
             <h3>Ingresa los datos de tu tarjeta</h3>
             <label style="font-weight:bold; font-size:13px; display:block; margin-bottom:5px;">Número de tarjeta</label>
-            <input type="text" class="input-wp" placeholder="xxxx xxxx xxxx xxxx">
+            <input type="text" class="input-wp" id="input-tarjeta" placeholder="xxxx xxxx xxxx xxxx">
             
             <label style="font-weight:bold; font-size:13px; display:block; margin-bottom:5px;">Rut</label>
             <input type="text" class="input-wp" id="rut-input-wp" placeholder="11.111.111-1">
             
-                <button class="btn btn-pagar-wp" onclick="irPantalla(3)">Pagar</button>
+            <button class="btn btn-pagar-wp" onclick="irPantalla(3)">Pagar</button>
         </div>
 
         <div id="screen-3" class="contenido-pantalla">
@@ -270,24 +271,22 @@
                     <div class="valor-banco" id="banco-rut">...</div>
 
                     <span class="label-banco">Cuenta de cargo</span>
-                    <select class="select-cuenta">
-                        <option>Cuenta Corriente N° XXXXX27108</option>
-                        <option>Cuenta RUT</option>
-                    </select>
+                    <select class="select-cuenta" id="select-banco-cuentas">
+                        </select>
                     
-                    <div class="texto-saldo">
-                        Saldo disponible $0<br>
-                        Saldo máximo para comprar $950.000
-                    </div>
+                    <div class="texto-saldo" id="saldo-disponible">
+                        </div>
 
                     <span class="label-banco">Selecciona forma de autorizar el pago</span>
-                    <div class="opciones-auth">
-                        <div class="radio-custom active">
+                    <div class="opciones-auth" id="opciones-auth">
+                        <label class="radio-custom active" data-method="bepass">
+                            <input type="radio" name="auth-method" value="bepass" checked style="display:none">
                             <div class="radio-circle"></div> BE Pass
-                        </div>
-                        <div class="radio-custom">
+                        </label>
+                        <label class="radio-custom" data-method="clave">
+                            <input type="radio" name="auth-method" value="clave" style="display:none">
                             <div class="radio-circle"></div> Clave de coordenadas
-                        </div>
+                        </label>
                     </div>
 
                     <div class="box-autorizar">
@@ -298,7 +297,7 @@
                         <div class="auth-desc">
                             Te enviaremos una notificación a tu celular para que autorices este pago.
                         </div>
-                            <button class="btn btn-naranja" onclick="finalizarCompra()">Autorizar</button>
+                        <button class="btn btn-naranja" id="btn-autorizar">Autorizar</button>
                     </div>
                 </div>
 
@@ -328,29 +327,86 @@
 
     </div>
 
+    <!-- Modal para clave de coordenadas -->
+    <div id="modal-clave" aria-hidden="true">
+        <div class="modal-contenido">
+            <button id="cerrar-modal-clave" class="btn btn-cerrar" type="button" aria-label="Cerrar">✕</button>
+            <h3>Clave de coordenadas</h3>
+            <p id="texto-modal">Se solicitará una coordenada para autorizar el pago.</p>
+            <div id="solicitud-coord">Solicitando coordenada: <strong>-</strong></div>
+            <input id="input-clave" type="text" placeholder="Ingresa el código solicitado" />
+            <div style="margin-top:12px; text-align:right;">
+                <button id="btn-cancel-clave" class="btn btn-secundario">Cancelar</button>
+                <button id="btn-submit-clave" class="btn btn-principal">Enviar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // --- FUNCIONES GENERADORAS ---
+
+        function generarMontoAleatorio() {
+            // Monto compra entre 25.000 y 250.000
+            return Math.floor(Math.random() * (250000 - 25000 + 1)) + 25000;
+        }
+
+        function generarNumeroCuenta() {
+            // Genera número de cuenta tipo XXXXX12345
+            const randomPart = Math.floor(Math.random() * 90000) + 10000; // 5 dígitos
+            return `XXXXX${randomPart}`;
+        }
+
+        function generarSaldoAleatorio(montoCompra) {
+            // Genera un saldo que sea siempre mayor al monto de compra para que no falte plata :D
+            // Entre el monto de compra + 50.000 y 2.000.000
+            const min = montoCompra + 50000;
+            const max = 2000000;
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // --- LÓGICA PRINCIPAL ---
+
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Cargar Monto
-            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            const total = carrito.reduce((acc, item) => acc + item.precio, 0);
-            const textoTotal = `$ ${total.toLocaleString('es-CL')}`;
             
+            // 1. MONTO A PAGAR (Aleatorio para pruebas o del Carrito)
+            // Nota: Si quieres usar siempre el del carrito, comenta la linea de abajo y descomenta la siguiente
+            const montoFinal = generarMontoAleatorio(); 
+            // const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            // const montoFinal = carrito.reduce((acc, item) => acc + item.precio, 0) || generarMontoAleatorio();
+
+            const textoTotal = `$ ${montoFinal.toLocaleString('es-CL')}`;
             document.getElementById('monto-top').textContent = textoTotal;
             document.getElementById('monto-banco').textContent = textoTotal;
 
-            // 2. Cargar Fecha y Hora
+            // 2. GENERAR DATOS BANCARIOS ALEATORIOS (Screen 4)
+            const cuentaCte = generarNumeroCuenta();
+            const selectCuentas = document.getElementById('select-banco-cuentas');
+            
+            // Limpiar y agregar opciones
+            selectCuentas.innerHTML = `
+                <option>Cuenta Corriente N° ${cuentaCte}</option>
+                <option>Cuenta RUT</option>
+            `;
+
+            const saldo = generarSaldoAleatorio(montoFinal);
+            document.getElementById('saldo-disponible').innerHTML = `
+                Saldo disponible $${saldo.toLocaleString('es-CL')}<br>
+                Saldo máximo para comprar $950.000
+            `;
+
+            // 3. FECHA Y HORA ACTUAL
             const hoy = new Date();
             const fechaStr = hoy.toLocaleDateString('es-CL') + ' ' + hoy.toLocaleTimeString('es-CL');
             document.getElementById('fecha-banco').textContent = fechaStr;
 
-            // 3. Cargar Datos Cliente (Nombre y RUT)
+            // 4. DATOS CLIENTE (NOMBRE Y RUT)
             const n = localStorage.getItem('cliente_nombre');
             const r = localStorage.getItem('cliente_rut');
 
             let nombreFinal = n || "VICTOR NORAMBUENA";
             let rutFinal = r || "20.570.418-3";
 
-            // Si venían en objeto (versión vieja del código)
+            // Compatibilidad con versiones previas
             if(!n) {
                 const obj = JSON.parse(localStorage.getItem('datosCliente'));
                 if(obj) { nombreFinal = obj.nombre; rutFinal = obj.rut; }
@@ -359,14 +415,103 @@
             document.getElementById('banco-nombre').textContent = nombreFinal;
             document.getElementById('banco-rut').textContent = rutFinal;
             
-            // Pre-llenar RUT en pantalla tarjeta
+            // Pre-llenar RUT en pantalla de tarjeta
             document.getElementById('rut-input-wp').value = rutFinal;
+
+            // --- SETUP: selección de método de autorización (BE Pass / Clave) ---
+            const opciones = Array.from(document.querySelectorAll('.opciones-auth .radio-custom'));
+            window.selectedAuthMethod = 'bepass';
+            opciones.forEach((el) => {
+                // ensure attribute exists
+                const method = el.getAttribute('data-method') || (el.textContent.toLowerCase().includes('clave') ? 'clave' : 'bepass');
+                el.setAttribute('data-method', method);
+                el.addEventListener('click', () => {
+                    opciones.forEach(x => x.classList.remove('active'));
+                    el.classList.add('active');
+                    window.selectedAuthMethod = method;
+
+                    // update title/description accordingly
+                    const authTitle = document.querySelector('.auth-title');
+                    const authDesc = document.querySelector('.auth-desc');
+                    if (method === 'clave') {
+                        authTitle.textContent = 'Autorizar con Clave de coordenadas';
+                        authDesc.textContent = 'Se te solicitará la coordenada correspondiente en una ventana segura.';
+                    } else {
+                        authTitle.textContent = 'Autorizar con Be Pass';
+                        authDesc.textContent = 'Te enviaremos una notificación a tu celular para que autorices este pago.';
+                    }
+                });
+            });
+
+            // Botón Autorizar (delegamos comportamiento según método)
+            const btnAutorizar = document.getElementById('btn-autorizar');
+            if (btnAutorizar) btnAutorizar.addEventListener('click', () => {
+                const method = window.selectedAuthMethod || 'bepass';
+                if (method === 'clave') {
+                    openClaveModal();
+                } else {
+                    // Simulación BE Pass (mantener comportamiento original)
+                    alert("¡PAGO EXITOSO!\nGracias por comprar en la Tienda Oficial.");
+                    localStorage.setItem('carrito', JSON.stringify([]));
+                    window.location.href = 'index.html';
+                }
+            });
+
+            // Modal clave: handlers
+            const modalClave = document.getElementById('modal-clave');
+            const inputClave = document.getElementById('input-clave');
+            const btnSubmitClave = document.getElementById('btn-submit-clave');
+            const btnCancelClave = document.getElementById('btn-cancel-clave');
+            const btnCerrarModalClave = document.getElementById('cerrar-modal-clave');
+
+            function openClaveModal() {
+                // generar coordenada aleatoria de ejemplo
+                const posiciones = ['A1','A2','B1','B3','C2','C4'];
+                const pos = posiciones[Math.floor(Math.random() * posiciones.length)];
+                modalClave.querySelector('#solicitud-coord strong').textContent = pos;
+                modalClave.classList.add('visible');
+                modalClave.setAttribute('aria-hidden', 'false');
+                inputClave.value = '';
+                setTimeout(() => inputClave.focus(), 200);
+                // para la simulación dejamos una "esperada" simple (no real)
+                window.__expectedClaveMock = '1234';
+            }
+
+            function closeClaveModal() {
+                modalClave.classList.remove('visible');
+                modalClave.setAttribute('aria-hidden', 'true');
+            }
+
+            btnSubmitClave.addEventListener('click', () => {
+                const v = inputClave.value.trim();
+                if (!v || v.length < 2) {
+                    alert('Código inválido. Ingresa la coordenada solicitada.');
+                    inputClave.focus();
+                    return;
+                }
+                // Validación simulada: aceptamos cualquier entrada con >=2 caracteres OR la correcta '1234'
+                const ok = (v === window.__expectedClaveMock) || v.length >= 2;
+                if (!ok) {
+                    alert('Código incorrecto. Intenta nuevamente.');
+                    inputClave.focus();
+                    return;
+                }
+
+                closeClaveModal();
+                // Simulación de éxito
+                alert('Clave correcta. Pago autorizado.\nGracias por comprar en la Tienda Oficial.');
+                localStorage.setItem('carrito', JSON.stringify([]));
+                window.location.href = 'index.html';
+            });
+
+            btnCancelClave.addEventListener('click', closeClaveModal);
+            btnCerrarModalClave.addEventListener('click', closeClaveModal);
+            modalClave.addEventListener('click', (e) => { if (e.target === modalClave) closeClaveModal(); });
         });
 
         function irPantalla(n) {
             document.querySelectorAll('.contenido-pantalla').forEach(p => p.classList.remove('visible'));
             
-            // Si vamos al Banco (4), ocultar header Webpay y cambiar fondo
             if(n === 4) {
                 document.getElementById('header-wp-box').style.display = 'none';
                 document.body.style.backgroundColor = '#fff';
@@ -374,7 +519,6 @@
 
             document.getElementById('screen-'+n).classList.add('visible');
 
-            // Timer de carga
             if(n === 3) {
                 setTimeout(() => irPantalla(4), 3000);
             }

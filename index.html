@@ -22,7 +22,7 @@
             <ul id="nav-links">
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#productos">Productos</a></li>
-                <li><a href="carrito.html">Carrito</a></li>
+                <li><a href="carrito.html">Carrito <span id="cart-count" class="cart-badge">0</span></a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
         </nav>
@@ -113,23 +113,36 @@
         }
                 document.addEventListener('DOMContentLoaded', () => {
 
-            const botonesAgregar = document.querySelectorAll('.producto button');
+                    function updateCartCount() {
+                        const countEl = document.getElementById('cart-count');
+                        if (!countEl) return;
+                        const carrito = obtenerCarrito();
+                        countEl.textContent = carrito.length;
+                    }
+
+                    // Inicializar contador al cargar
+                    updateCartCount();
+
+                    const botonesAgregar = document.querySelectorAll('.producto button');
                 
-            botonesAgregar.forEach(boton => {
-                boton.addEventListener('click', () => {
-                    const productoDiv = boton.closest('.producto');
-                    const nombre = productoDiv.querySelector('.producto-nombre').textContent;
+                    botonesAgregar.forEach(boton => {
+                        boton.addEventListener('click', () => {
+                            const productoDiv = boton.closest('.producto');
+                            const nombre = productoDiv.querySelector('.producto-nombre').textContent;
 
-                    const precioTexto = productoDiv.querySelector('.producto-precio').textContent;
-                    const precio = limpiarPrecio(precioTexto);
-                    const carrito = obtenerCarrito();
-                    carrito.push({ nombre, precio });
-                    guardarCarrito(carrito);
+                            const precioTexto = productoDiv.querySelector('.producto-precio').textContent;
+                            const precio = limpiarPrecio(precioTexto);
+                            const carrito = obtenerCarrito();
+                            carrito.push({ nombre, precio });
+                            guardarCarrito(carrito);
 
-            alert('Producto agregado al carrito. Puedes revisarlo en la sección Carrito.');
+                            // Actualizar contador en la cabecera
+                            updateCartCount();
+
+                            alert('Producto agregado al carrito. Puedes revisarlo en la sección Carrito.');
+                        });
+                    });
                 });
-            });
-        });
     </script>
 </body>
 

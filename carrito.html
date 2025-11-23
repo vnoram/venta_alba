@@ -111,13 +111,20 @@
             }
             function renderizarResumen(carrito) {
                 resumenItems.innerHTML = '';
-                let total = 0;
-
+                // Agregamos por nombre
+                const mapa = {};
                 carrito.forEach(item => {
+                    if (!mapa[item.nombre]) mapa[item.nombre] = { nombre: item.nombre, precio: item.precio, cantidad: 0 };
+                    mapa[item.nombre].cantidad += 1;
+                });
+
+                let total = 0;
+                Object.values(mapa).forEach(prod => {
                     const li = document.createElement('li');
-                    li.textContent = `${item.nombre} - $${item.precio.toLocaleString('es-CL')}`;
+                    const subtotal = prod.precio * prod.cantidad;
+                    li.textContent = `${prod.nombre} x${prod.cantidad} - $${subtotal.toLocaleString('es-CL')}`;
                     resumenItems.appendChild(li);
-                    total += item.precio;
+                    total += subtotal;
                 });
 
                 resumenTotal.textContent = total.toLocaleString('es-CL');
@@ -138,7 +145,6 @@
             function actualizarVista() {
                 const carrito = obtenerCarrito();
                 listaCarrito.innerHTML = '';
-                let total = 0;
 
                 if (carrito.length === 0) {
                     // Mostrar mensaje vacío y ocultar resumen
@@ -149,27 +155,51 @@
                     divVacio.style.display = 'none';
                     divContenido.style.display = 'block';
 
-                    // Generar lista de productos
-                    carrito.forEach((item, index) => {
+                    // Agregar por nombre y mostrar cantidad + subtotal
+                    const mapa = {};
+                    carrito.forEach(item => {
+                        if (!mapa[item.nombre]) mapa[item.nombre] = { nombre: item.nombre, precio: item.precio, cantidad: 0 };
+                        mapa[item.nombre].cantidad += 1;
+                    });
+
+                    let total = 0;
+                    Object.values(mapa).forEach(prod => {
                         const li = document.createElement('li');
                         li.classList.add('item-carrito');
+                        const subtotal = prod.precio * prod.cantidad;
+                        // Usamos encodeURIComponent para manejar caracteres en el onclick
+                        const encodedName = encodeURIComponent(prod.nombre);
                         li.innerHTML = `
-                            <span class="nombre-prod"><b>${item.nombre}</b></span>
-                            <span class="precio-prod">$${item.precio.toLocaleString('es-CL')}</span>
-                            <button onclick="eliminarItem(${index})" class="btn btn-eliminar" title="Eliminar">✕</button>
+                            <span class="nombre-prod"><b>${prod.nombre}</b> <small>x${prod.cantidad}</small></span>
+                            <span class="precio-prod">$${subtotal.toLocaleString('es-CL')}</span>
+                            <button onclick="eliminarUnaUnidad('${encodedName}')" class="btn btn-eliminar" title="Eliminar una unidad">−</button>
+                            <button onclick="eliminarTodasUnidad('${encodedName}')" class="btn btn-eliminar" title="Eliminar todo">✕</button>
                         `;
                         listaCarrito.appendChild(li);
-                        total += item.precio;
+                        total += subtotal;
                     });
-                }
 
-                totalSpan.textContent = total.toLocaleString('es-CL');
+                    totalSpan.textContent = total.toLocaleString('es-CL');
+                }
             }
 
-            // Función extra para eliminar productos (Opcional pero útil)
-            window.eliminarItem = function (index) {
+            // Eliminar una unidad del producto (por nombre)
+            window.eliminarUnaUnidad = function (encodedName) {
+                const nombre = decodeURIComponent(encodedName);
                 let carrito = obtenerCarrito();
-                carrito.splice(index, 1); // Quita el elemento
+                const idx = carrito.findIndex(i => i.nombre === nombre);
+                if (idx >= 0) {
+                    carrito.splice(idx, 1);
+                    localStorage.setItem('carrito', JSON.stringify(carrito));
+                    actualizarVista();
+                }
+            };
+
+            // Eliminar todas las unidades de un producto
+            window.eliminarTodasUnidad = function (encodedName) {
+                const nombre = decodeURIComponent(encodedName);
+                let carrito = obtenerCarrito();
+                carrito = carrito.filter(i => i.nombre !== nombre);
                 localStorage.setItem('carrito', JSON.stringify(carrito));
                 actualizarVista();
             };

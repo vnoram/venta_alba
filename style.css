@@ -449,3 +449,17 @@ a.btn, a.btn-inicio, a.btn-ver-carrito, a.btn-ver-detalle {
     border-radius: 6px;
 }
 
+/* Badge contador del carrito en la cabecera */
+.cart-badge {
+    display: inline-block;
+    min-width: 20px;
+    padding: 2px 7px;
+    background: var(--color-accent-red-strong);
+    color: var(--color-primary-contrast);
+    border-radius: 999px;
+    font-size: 0.85em;
+    font-weight: bold;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
