@@ -462,4 +462,253 @@ a.btn, a.btn-inicio, a.btn-ver-carrito, a.btn-ver-detalle {
     margin-left: 8px;
     vertical-align: middle;
 }
+/* Checkout */
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
 
+.checkout-container {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-title {
+    margin: 0 0 16px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.accordion-checkout {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.step-item {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fafafa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.step-item.completed .step-header {
+    border-color: var(--color-primary);
+}
+
+.step-item.active {
+    border-color: var(--color-primary);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f6f6f6;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+}
+
+.step-item.active .step-header {
+    border-left-color: var(--color-primary);
+}
+
+.step-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+
+.step-check {
+    color: var(--color-primary);
+    background: #e8e8e8;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
+}
+
+.step-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-actions .btn-editar {
+    padding: 6px 10px;
+    font-size: 0.9em;
+}
+
+.step-arrow {
+    font-size: 1.2em;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+}
+
+.step-item.active .step-arrow {
+    transform: rotate(180deg);
+}
+
+.step-body {
+    padding: 16px;
+    display: none;
+    background: var(--bg);
+}
+
+.step-item.active .step-body {
+    display: block;
+}
+
+.fila-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo label {
+    font-weight: bold;
+    color: var(--text-default);
+}
+
+.campo input {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #f9f9f9;
+}
+
+.opcion-envio-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #fff;
+}
+
+.pago-box {
+    border: 1px solid var(--border-color);
+    padding: 14px;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.pago-opcion {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.terminos {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 14px 0;
+}
+
+.terminos a { color: var(--color-primary); }
+
+.volver-carrito {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.volver-carrito a { color: var(--text-muted); }
+
+.resumen-lateral {
+    position: sticky;
+    top: 90px;
+}
+
+.resumen-card {
+    background: var(--bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.resumen-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+.resumen-etiqueta {
+    margin: 0;
+    font-weight: bold;
+}
+
+.resumen-mini-link {
+    margin: 0;
+    color: var(--color-primary);
+    font-size: 0.9em;
+    text-decoration: none;
+}
+
+.resumen-totales {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-weight: bold;
+}
+
+.resumen-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.resumen-row.total {
+    font-size: 1.1em;
+}
+
+.resumen-cupon {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-weight: bold;
+}
+
+.resumen-cupon-accion {
+    border: 1px solid var(--color-primary);
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+@media (max-width: 960px) {
+    .checkout-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .resumen-lateral {
+        position: static;
+    }
+}

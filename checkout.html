@@ -18,91 +18,133 @@
     </header>
 
     <main>
-        <div class="checkout-container">
-            <h2 style="margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">Checkout</h2>
+        <div class="checkout-layout">
+            <div class="checkout-container">
+                <h2 class="checkout-title">Checkout</h2>
 
-            <div class="accordion-checkout">
+                <div class="accordion-checkout">
 
                 <div id="step-1" class="step-item active">
-                    <div class="step-header">
-                        <span class="step-title">1 Datos Personales</span>
-                        <span class="step-check">✔</span>
-                        <button class="btn btn-editar" onclick="abrirPaso(1)">✎ Editar</button>
-                    </div>
-                    <div class="step-body">
-                        <form id="form-1">
-                            <div class="fila-form">
-                                <div class="campo"><label>Nombre</label><input type="text" id="nombre" required></div>
-                                <div class="campo"><label>Apellidos</label><input type="text" id="apellido" required>
-                                </div>
+                        <div class="step-header" onclick="abrirPaso(1)">
+                            <div class="step-header-left">
+                                <span class="step-title">1 Datos Personales</span>
+                                <span class="step-check">✔</span>
                             </div>
-                            <div class="campo"><label>Correo electrónico</label><input type="email" id="correo"
-                                    required></div>
-                            <button type="button" class="btn btn-continuar" onclick="completarPaso(1)">Continuar</button>
-                        </form>
-                    </div>
-                </div>
 
+                           <div class="step-actions">
+                                <button class="btn btn-editar" type="button" onclick="abrirPaso(1)">✎ Editar</button>
+                                <span class="step-arrow">▾</span>
+                            </div>
+                        </div>
+                        <div class="step-body">
+                            <form id="form-1">
+                                <div class="fila-form">
+                                    <div class="campo"><label>Nombre</label><input type="text" id="nombre" required></div>
+                                    <div class="campo"><label>Apellidos</label><input type="text" id="apellido" required>
+                                    </div>
+                                </div>
+                                <div class="campo"><label>Correo electrónico</label><input type="email" id="correo"
+                                        required></div>
+                                <button type="button" class="btn btn-continuar" onclick="completarPaso(1)">Continuar</button>
+                            </form>
+                        </div> 
+                </div>
                 <div id="step-2" class="step-item">
-                    <div class="step-header">
-                        <span class="step-title">2 Direcciones</span>
-                        <span class="step-check">✔</span>
-                        <button class="btn btn-editar" onclick="abrirPaso(2)">✎ Editar</button>
-                    </div>
-                    <div class="step-body">
-                        <form id="form-2">
-                            <div class="campo"><label>RUT</label><input type="text" id="rut"></div>
-                            <div class="campo"><label>Dirección</label><input type="text" id="direccion"></div>
-                            <button type="button" class="btn btn-continuar" onclick="completarPaso(2)">Continuar</button>
-                        </form>
-                    </div>
+                        <div class="step-header" onclick="abrirPaso(2)">
+                            <div class="step-header-left">
+                                <span class="step-title">2 Direcciones</span>
+                                <span class="step-check">✔</span>
+                            </div>
+                            <div class="step-actions">
+                                <button class="btn btn-editar" type="button" onclick="abrirPaso(2)">✎ Editar</button>
+                                <span class="step-arrow">▾</span>
+                            </div>
+                        </div>
+                        <div class="step-body">
+                            <form id="form-2">
+                                <div class="campo"><label>RUT</label><input type="text" id="rut"></div>
+                                <div class="campo"><label>Dirección</label><input type="text" id="direccion"></div>
+                                <button type="button" class="btn btn-continuar" onclick="completarPaso(2)">Continuar</button>
+                            </form>
+                        </div>
                 </div>
 
                 <div id="step-3" class="step-item">
-                    <div class="step-header">
-                        <span class="step-title">3 Método de envío</span>
-                        <span class="step-check">✔</span>
-                        <button class="btn btn-editar" onclick="abrirPaso(3)">✎ Editar</button>
-                    </div>
-                    <div class="step-body">
-                        <div class="opcion-envio-box">
-                            <input type="radio" checked>
-                            <div>
-                                <strong>Chilexpress - Envío a Domicilio</strong>
-                                <p style="margin:0; color:green; font-size:0.9em;">Gratis</p>
+                        <div class="step-header" onclick="abrirPaso(3)">
+                            <div class="step-header-left">
+                                <span class="step-title">3 Método de envío</span>
+                                <span class="step-check">✔</span>
+                            </div>
+                            <div class="step-actions">
+                                <button class="btn btn-editar" type="button" onclick="abrirPaso(3)">✎ Editar</button>
+                                <span class="step-arrow">▾</span>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-continuar" onclick="completarPaso(3)">Continuar</button>
-                    </div>
+                        <div class="step-body">
+                            <div class="opcion-envio-box">
+                                <input type="radio" checked>
+                                <div>
+                                    <strong>Chilexpress - Envío a Domicilio</strong>
+                                    <p style="margin:0; color:green; font-size:0.9em;">Gratis</p>
+                                </div>
+                                </div>
+                            <button type="button" class="btn btn-continuar" onclick="completarPaso(3)">Continuar</button>
+                            </div>
+
+                        </div>
                 </div>
 
                 <div id="step-4" class="step-item">
-                    <div class="step-header">
-                        <span class="step-title">4 Pago</span>
-                    </div>
-                    <div class="step-body">
-                        <div class="pago-box">
-                            <p>Pago con tarjetas de crédito o Redcompra</p>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <input type="radio" name="pago" checked>
-                                <img src="img/transbank.png" alt="Webpay" width="180">
+                        <div class="step-header" onclick="abrirPaso(4)">
+                            <div class="step-header-left">
+                                <span class="step-title">4 Pago</span>
+                            </div>
+                            <div class="step-actions">
+                                <span class="step-arrow">▾</span>
                             </div>
                         </div>
+                        <div class="step-body">
+                            <div class="pago-box">
+                                <p>Pago con tarjetas de crédito o Redcompra</p>
+                                <div class="pago-opcion">
+                                    <input type="radio" name="pago" checked>
+                                    <img src="img/transbank.png" alt="Webpay" width="180">
+                                </div>
+                            </div>
 
                         <div class="terminos">
-                            <input type="checkbox" id="check-terminos">
-                            <label for="check-terminos">Estoy de acuerdo con los <a href="#">términos del servicio</a> y
-                                los acepto sin reservas.</label>
-                        </div>
+                                <input type="checkbox" id="check-terminos">
+                                <label for="check-terminos">Estoy de acuerdo con los <a href="#">términos del servicio</a> y
+                                    los acepto sin reservas.</label>
+                            </div>
 
                         <button type="button" id="btn-finalizar" class="btn btn-pagar-rojo">Confirmar medio de pago</button>
+                        </div>
                     </div>
                 </div>
 
             </div>
 
-            <p style="margin-top: 20px; text-align: center;"><a href="carrito.html" style="color:#666;">Volver al
-                    carrito</a></p>
+            <aside class="resumen-lateral">
+                <div class="resumen-card">
+                    <div class="resumen-header">
+                        <div>
+                            <p class="resumen-etiqueta">1 artículo</p>
+                            <p class="resumen-mini-link">mostrar detalles</p>
+                        </div>
+                        <a class="resumen-mini-link" href="carrito.html">Editar</a>
+                    </div>
+                    <div class="resumen-totales">
+                        <div class="resumen-row"><span>Subtotal</span><span>$ 62.991</span></div>
+                        <div class="resumen-row"><span>Transportes</span><span>$ 0</span></div>
+                        <div class="resumen-row total"><span>Total</span><span>$ 62.991</span></div>
+                    </div>
+                    <div class="resumen-cupon">
+                        <span>Código promocional</span>
+                        <div class="resumen-cupon-accion">Agregar</div>
+                    </div>
+                </div>
+            </aside>
         </div>
     </main>
 
