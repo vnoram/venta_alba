@@ -171,14 +171,15 @@
             padding: 20px;
             border-radius: 4px;
         }
-        .resumen-row { margin-bottom: 20px; }
+        .resumen-titulo { font-weight: bold; margin-top: 0; margin-bottom: 12px; color: #333; }
+        .resumen-row { margin-bottom: 14px; }
         .resumen-label { font-weight: bold; font-size: 13px; color: #333; display: block; margin-bottom: 4px;}
         .resumen-valor { font-size: 15px; color: #333; }
-        .resumen-comercio {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
+        .resumen-items { list-style: none; padding: 0; margin: 0 0 12px 0; }
+        .resumen-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: #444; }
+        .resumen-item small { color: #777; margin-left: 6px; }
+        .resumen-total { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 16px; margin-top: 8px; }
+        .resumen-placeholder { color: #777; font-size: 14px; margin-bottom: 10px; }
 
         /* Estilos Generales Webpay */
         .header-webpay { padding: 20px 40px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
@@ -303,16 +304,19 @@
 
                 <div class="col-der">
                     <div class="box-resumen">
-                        <div class="resumen-row resumen-comercio">
-                            <div>
-                                <span class="resumen-label">Comercio</span>
-                                <div class="resumen-valor">TIENDA WEB COLO-COL</div>
-                            </div>
-                            <img src="img/logo-colo-colo.png" height="30" alt="CC">
+                        <h4 class="resumen-titulo">Resumen de la compra</h4>
+                        <div class="resumen-row">
+                            <span class="resumen-label">Comercio</span>
+                            <div class="resumen-valor">TIENDA WEB COLO-COL</div>
                         </div>
 
                         <div class="resumen-row">
-                            <span class="resumen-label">Monto</span>
+                            <span class="resumen-label">Productos</span>
+                            <ul class="resumen-items" id="resumen-items-banco"></ul>
+                        </div>
+
+                        <div class="resumen-row resumen-total">
+                            <span>Total</span>
                             <div class="resumen-valor" style="font-weight:bold; font-size:18px;" id="monto-banco">$0</div>
                         </div>
 
@@ -368,11 +372,10 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             
-            // 1. MONTO A PAGAR (Aleatorio para pruebas o del Carrito)
-            // Nota: Si quieres usar siempre el del carrito, comenta la linea de abajo y descomenta la siguiente
-            const montoFinal = generarMontoAleatorio(); 
-            // const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            // const montoFinal = carrito.reduce((acc, item) => acc + item.precio, 0) || generarMontoAleatorio();
+        // 1. MONTO A PAGAR (Se intenta usar el carrito; si no hay datos, se usa aleatorio)
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const montoCarrito = carrito.reduce((acc, item) => acc + (item.precio || 0), 0);
+            const montoFinal = montoCarrito > 0 ? montoCarrito : generarMontoAleatorio();
 
             const textoTotal = `$ ${montoFinal.toLocaleString('es-CL')}`;
             document.getElementById('monto-top').textContent = textoTotal;
@@ -399,7 +402,38 @@
             const fechaStr = hoy.toLocaleDateString('es-CL') + ' ' + hoy.toLocaleTimeString('es-CL');
             document.getElementById('fecha-banco').textContent = fechaStr;
 
-            // 4. DATOS CLIENTE (NOMBRE Y RUT)
+            // 4. RESUMEN DE PRODUCTOS
+            const listaResumen = document.getElementById('resumen-items-banco');
+            if (listaResumen) {
+                listaResumen.innerHTML = '';
+
+                if (carrito.length === 0) {
+                    const li = document.createElement('li');
+                    li.className = 'resumen-placeholder';
+                    li.textContent = 'No hay productos en el carrito. Se usó un monto referencial.';
+                    listaResumen.appendChild(li);
+                } else {
+                    const agrupados = {};
+                    carrito.forEach(item => {
+                        const clave = item.nombre || 'Producto sin nombre';
+                        if (!agrupados[clave]) agrupados[clave] = { cantidad: 0, precio: item.precio || 0 };
+                        agrupados[clave].cantidad += 1;
+                    });
+
+                    Object.entries(agrupados).forEach(([nombre, data]) => {
+                        const li = document.createElement('li');
+                        li.className = 'resumen-item';
+                        const subtotal = (data.precio || 0) * data.cantidad;
+                        li.innerHTML = `
+                            <span>${nombre} <small>x${data.cantidad}</small></span>
+                            <span>$${subtotal.toLocaleString('es-CL')}</span>
+                        `;
+                        listaResumen.appendChild(li);
+                    });
+                }
+            }
+
+            // 5. DATOS CLIENTE (NOMBRE Y RUT)
             const n = localStorage.getItem('cliente_nombre');
             const r = localStorage.getItem('cliente_rut');
 
