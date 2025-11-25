@@ -42,6 +42,7 @@
                                     <div class="campo"><label>Nombre</label><input type="text" id="nombre" required></div>
                                     <div class="campo"><label>Apellidos</label><input type="text" id="apellido" required>
                                     </div>
+                                    <div class="campo"><label>RUT</label><input type="text" id="rut"></div>
                                 </div>
                                 <div class="campo"><label>Correo electrónico</label><input type="email" id="correo"
                                         required></div>
@@ -62,7 +63,6 @@
                         </div>
                         <div class="step-body">
                             <form id="form-2">
-                                <div class="campo"><label>RUT</label><input type="text" id="rut"></div>
                                 <div class="campo"><label>Dirección</label><input type="text" id="direccion"></div>
                                 <button type="button" class="btn btn-continuar" onclick="completarPaso(2)">Continuar</button>
                             </form>
@@ -127,17 +127,17 @@
 
             <aside class="resumen-lateral">
                 <div class="resumen-card">
-                    <div class="resumen-header">
-                        <div>
-                            <p class="resumen-etiqueta">1 artículo</p>
-                            <p class="resumen-mini-link">mostrar detalles</p>
+                        <div class="resumen-header">
+                            <div>
+                                <p class="resumen-etiqueta"><span id="resumen-cantidad">0</span> artículo(s)</p>
+                                <p class="resumen-mini-link">mostrar detalles</p>
+                            </div>
+                            <a class="resumen-mini-link" href="carrito.html">Editar</a>
                         </div>
-                        <a class="resumen-mini-link" href="carrito.html">Editar</a>
-                    </div>
-                    <div class="resumen-totales">
-                        <div class="resumen-row"><span>Subtotal</span><span>$ 62.991</span></div>
-                        <div class="resumen-row"><span>Transportes</span><span>$ 0</span></div>
-                        <div class="resumen-row total"><span>Total</span><span>$ 62.991</span></div>
+                        <div class="resumen-totales">
+                            <div class="resumen-row"><span>Subtotal</span><span id="resumen-subtotal">$ 0</span></div>
+                            <div class="resumen-row"><span>Transportes</span><span id="resumen-transportes">$ 0</span></div>
+                            <div class="resumen-row total"><span>Total</span><span id="resumen-total">$ 0</span></div>
                     </div>
                     <div class="resumen-cupon">
                         <span>Código promocional</span>
@@ -209,6 +209,48 @@
             // Redirigir a la simulación de Webpay
             window.location.href = 'pago.html';
         });
+
+        // Actualizar resumen lateral basado en localStorage 'carrito'
+        (function(){
+            function obtenerCarrito(){
+                const raw = localStorage.getItem('carrito');
+                return raw ? JSON.parse(raw) : [];
+            }
+
+            function calcularTotales(){
+                const carrito = obtenerCarrito();
+                const cantidad = carrito.length;
+                const subtotal = carrito.reduce((s,i)=> s + (Number(i.precio) || 0), 0);
+                // transportes fijo 0 por ahora
+                const transportes = 0;
+                const total = subtotal + transportes;
+                return { cantidad, subtotal, transportes, total };
+            }
+
+            function formatearCLP(n){
+                return '$ ' + Number(n).toLocaleString('es-CL');
+            }
+
+            function actualizarResumenLateral(){
+                const vals = calcularTotales();
+                const cantidadEl = document.getElementById('resumen-cantidad');
+                const subEl = document.getElementById('resumen-subtotal');
+                const transpEl = document.getElementById('resumen-transportes');
+                const totalEl = document.getElementById('resumen-total');
+                if(cantidadEl) cantidadEl.textContent = vals.cantidad + (vals.cantidad === 1 ? ' artículo' : ' artículos');
+                if(subEl) subEl.textContent = formatearCLP(vals.subtotal);
+                if(transpEl) transpEl.textContent = formatearCLP(vals.transportes);
+                if(totalEl) totalEl.textContent = formatearCLP(vals.total);
+            }
+
+            // Ejecutar al cargar la página
+            actualizarResumenLateral();
+
+            // Escuchar cambios en localStorage (cuando se modifique desde otra pestaña)
+            window.addEventListener('storage', (e)=>{
+                if(e.key === 'carrito') actualizarResumenLateral();
+            });
+        })();
     </script>
 </body>
 

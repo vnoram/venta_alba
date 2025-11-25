@@ -355,14 +355,13 @@
         }
 
         function generarNumeroCuenta() {
-            // Genera número de cuenta tipo XXXXX12345
+            // número aleatorio de cuenta tipo XXXXX12345
             const randomPart = Math.floor(Math.random() * 90000) + 10000; // 5 dígitos
             return `XXXXX${randomPart}`;
         }
 
         function generarSaldoAleatorio(montoCompra) {
-            // Genera un saldo que sea siempre mayor al monto de compra para que no falte plata :D
-            // Entre el monto de compra + 50.000 y 2.000.000
+            // saldo aleatorio entre montoCompra + 50.000 y 2.000.000
             const min = montoCompra + 50000;
             const max = 2000000;
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -372,7 +371,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             
-        // 1. MONTO A PAGAR (Se intenta usar el carrito; si no hay datos, se usa aleatorio)
             const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
             const montoCarrito = carrito.reduce((acc, item) => acc + (item.precio || 0), 0);
             const montoFinal = montoCarrito > 0 ? montoCarrito : generarMontoAleatorio();
@@ -381,11 +379,10 @@
             document.getElementById('monto-top').textContent = textoTotal;
             document.getElementById('monto-banco').textContent = textoTotal;
 
-            // 2. GENERAR DATOS BANCARIOS ALEATORIOS (Screen 4)
             const cuentaCte = generarNumeroCuenta();
             const selectCuentas = document.getElementById('select-banco-cuentas');
             
-            // Limpiar y agregar opciones
+
             selectCuentas.innerHTML = `
                 <option>Cuenta Corriente N° ${cuentaCte}</option>
                 <option>Cuenta RUT</option>
